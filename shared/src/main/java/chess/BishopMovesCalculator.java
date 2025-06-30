@@ -12,28 +12,31 @@ class BishopMovesCalculator extends PieceMovesCalculator {
         // Check up and to the left
         ChessPosition newPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
         newPosition.updatePosition(1, -1);
-        while(this.validMove(newPosition)) {
+        while(this.validMove(board, myPosition, newPosition)) {
             moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+            if (isCapture(board, myPosition, newPosition)) {
+                break;
+            }
             newPosition.updatePosition(1, -1);
         }
         // Check up and to the right
         newPosition.updatePosition(myPosition);
         newPosition.updatePosition(1, 1);
-        while(this.validMove(newPosition)) {
+        while(this.validMove(board, myPosition, newPosition)) {
             moves.add(new ChessMove(myPosition, newPosition.copy(), null));
             newPosition.updatePosition(1, 1);
         }
         // Check down and to the left
         newPosition.updatePosition(myPosition);
         newPosition.updatePosition(-1, -1);
-        while(this.validMove(newPosition)) {
+        while(this.validMove(board, myPosition, newPosition)) {
             moves.add(new ChessMove(myPosition, newPosition.copy(), null));
             newPosition.updatePosition(-1, -1);
         }
         // Check down and to the right
         newPosition.updatePosition(myPosition);
         newPosition.updatePosition(-1, 1);
-        while(this.validMove(newPosition)) {
+        while(this.validMove(board, myPosition, newPosition)) {
             moves.add(new ChessMove(myPosition, newPosition.copy(), null));
             newPosition.updatePosition(-1, 1);
         }

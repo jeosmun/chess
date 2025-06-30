@@ -9,8 +9,8 @@ class BishopMovesCalculator extends PieceMovesCalculator {
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> moves = new java.util.ArrayList<>();
+        ChessPosition newPosition = myPosition.copy();
         // Check up and to the left
-        ChessPosition newPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
         newPosition.updatePosition(1, -1);
         while(this.validMove(board, myPosition, newPosition)) {
             moves.add(new ChessMove(myPosition, newPosition.copy(), null));

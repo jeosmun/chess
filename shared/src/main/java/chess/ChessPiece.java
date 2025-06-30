@@ -54,7 +54,27 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> moves = new java.util.ArrayList<>();
-        if (board.getPiece(myPosition).getPieceType() == ChessPiece.PieceType.BISHOP) {
+        if (board.getPiece(myPosition).getPieceType() == PieceType.BISHOP) {
+            BishopMovesCalculator calc = new BishopMovesCalculator();
+            moves = calc.pieceMoves(board, myPosition);
+        }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.KING) {
+            KingMovesCalculator calc = new KingMovesCalculator();
+            moves = calc.pieceMoves(board, myPosition);
+        }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.KNIGHT) {
+            BishopMovesCalculator calc = new BishopMovesCalculator();
+            moves = calc.pieceMoves(board, myPosition);
+        }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN) {
+            BishopMovesCalculator calc = new BishopMovesCalculator();
+            moves = calc.pieceMoves(board, myPosition);
+        }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN) {
+            BishopMovesCalculator calc = new BishopMovesCalculator();
+            moves = calc.pieceMoves(board, myPosition);
+        }
+        if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK) {
             BishopMovesCalculator calc = new BishopMovesCalculator();
             moves = calc.pieceMoves(board, myPosition);
         }

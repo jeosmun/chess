@@ -42,4 +42,14 @@ public class ChessMove {
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
     }
+
+    public String toString() {
+        var stringMove = new StringBuilder();
+        stringMove.append("(");
+        stringMove.append(endPosition.getRow());
+        stringMove.append(", ");
+        stringMove.append(endPosition.getColumn());
+        stringMove.append(")");
+        return stringMove.toString();
+    }
 }

@@ -24,6 +24,9 @@ class BishopMovesCalculator extends PieceMovesCalculator {
         newPosition.updatePosition(1, 1);
         while(this.validMove(board, myPosition, newPosition)) {
             moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+            if (isCapture(board, myPosition, newPosition)) {
+                break;
+            }
             newPosition.updatePosition(1, 1);
         }
         // Check down and to the left
@@ -31,6 +34,9 @@ class BishopMovesCalculator extends PieceMovesCalculator {
         newPosition.updatePosition(-1, -1);
         while(this.validMove(board, myPosition, newPosition)) {
             moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+            if (isCapture(board, myPosition, newPosition)) {
+                break;
+            }
             newPosition.updatePosition(-1, -1);
         }
         // Check down and to the right
@@ -38,6 +44,9 @@ class BishopMovesCalculator extends PieceMovesCalculator {
         newPosition.updatePosition(-1, 1);
         while(this.validMove(board, myPosition, newPosition)) {
             moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+            if (isCapture(board, myPosition, newPosition)) {
+                break;
+            }
             newPosition.updatePosition(-1, 1);
         }
         return moves;

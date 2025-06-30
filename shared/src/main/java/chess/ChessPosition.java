@@ -8,8 +8,8 @@ package chess;
  */
 public class ChessPosition {
 
-    private final int row;
-    private final int column;
+    private int row;
+    private int column;
 
     public ChessPosition(int row, int col) {
         this.row = row;
@@ -30,5 +30,19 @@ public class ChessPosition {
      */
     public int getColumn() {
         return column;
+    }
+
+    public void updatePosition(int rowChange, int columnChange) {
+        this.row = this.getRow() + rowChange;
+        this.column = this.getColumn() + columnChange;
+    }
+
+    public void updatePosition(ChessPosition position) {
+        this.row = position.getRow();
+        this.column = position.getColumn();
+    }
+
+    public ChessPosition copy() {
+        return new ChessPosition(row, column);
     }
 }

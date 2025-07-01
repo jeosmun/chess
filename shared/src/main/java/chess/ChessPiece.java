@@ -75,7 +75,7 @@ public class ChessPiece {
             moves = calc.pieceMoves(board, myPosition);
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK) {
-            BishopMovesCalculator calc = new BishopMovesCalculator();
+            RookMovesCalculator calc = new RookMovesCalculator();
             moves = calc.pieceMoves(board, myPosition);
         }
         return moves;

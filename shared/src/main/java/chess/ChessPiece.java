@@ -67,7 +67,7 @@ public class ChessPiece {
             moves = calc.pieceMoves(board, myPosition);
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN) {
-            BishopMovesCalculator calc = new BishopMovesCalculator();
+            PawnMovesCalculator calc = new PawnMovesCalculator();
             moves = calc.pieceMoves(board, myPosition);
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN) {

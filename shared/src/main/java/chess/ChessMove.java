@@ -46,20 +46,19 @@ public class ChessMove {
     }
 
     public String toString() {
-        var stringMove = new StringBuilder();
-        stringMove.append(promotionPiece);
-        stringMove.append(":(");
-        stringMove.append(startPosition.getRow());
-        stringMove.append(", ");
-        stringMove.append(startPosition.getColumn());
-        stringMove.append(")");
-        stringMove.append("->");
-        stringMove.append("(");
-        stringMove.append(endPosition.getRow());
-        stringMove.append(", ");
-        stringMove.append(endPosition.getColumn());
-        stringMove.append(")");
-        return stringMove.toString();
+        var stringMoves = new StringBuilder();
+        stringMoves.append("[(");
+        stringMoves.append(startPosition.getRow());
+        stringMoves.append(", ");
+        stringMoves.append(startPosition.getColumn());
+        stringMoves.append(")->(");
+        stringMoves.append(endPosition.getRow());
+        stringMoves.append(", ");
+        stringMoves.append(endPosition.getColumn());
+        stringMoves.append("), ");
+        stringMoves.append(promotionPiece);
+        stringMoves.append("]");
+        return stringMoves.toString();
     }
 
     @Override

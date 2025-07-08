@@ -1,62 +1,58 @@
 package chess;
 
-import java.util.Collection;
+public class KnightMovesCalculator extends PieceMovesCalculator{
 
-public class KnightMovesCalculator extends PieceMovesCalculator {
+    public KnightMovesCalculator(ChessBoard board, ChessPosition myPosition) {super(board, myPosition);}
 
-    public KnightMovesCalculator() {}
-
-    @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> moves = new java.util.ArrayList<>();
+    public void pieceMoves() {
+        // Initialize newPosition
         ChessPosition newPosition = myPosition.copy();
-        // Check up 2 and left 1
-        newPosition.updatePosition(2, -1);
-        if(validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        // Check up 2 left 1
+        newPosition.update(2, -1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
-        // Check up 2 and right 1
-        newPosition.updatePosition(2, 1);
-        if(validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        // Check up 2 right 1
+        newPosition.update(myPosition);
+        newPosition.update(2, 1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
-        // Check right 2 and up 1
-        newPosition.updatePosition(1, 2);
-        if(validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        // Check up 1 right 2
+        newPosition.update(myPosition);
+        newPosition.update(1, 2);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
-        // Check right 2 and down 1
-        newPosition.updatePosition(-1, 2);
-        if(validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        // Check down 1 right 2
+        newPosition.update(myPosition);
+        newPosition.update(-1, 2);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
-        // Check down 2 and right 1
-        newPosition.updatePosition(-2, 1);
-        if(validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        // Check down 2 right 1
+        newPosition.update(myPosition);
+        newPosition.update(-2, 1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
-        // Check down 2 and left 1
-        newPosition.updatePosition(-2, -1);
-        if(validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        // Check down 2 left 1
+        newPosition.update(myPosition);
+        newPosition.update(-2, -1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
-        // Check left 2 and down 1
-        newPosition.updatePosition(-1, -2);
-        if(validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        // Check down 1 left 2
+        newPosition.update(myPosition);
+        newPosition.update(-1, -2);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
-        // Check left 2 and up 1
-        newPosition.updatePosition(1, -2);
-        if(validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        // Check up 1 left 2
+        newPosition.update(myPosition);
+        newPosition.update(1, -2);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        return moves;
     }
 }

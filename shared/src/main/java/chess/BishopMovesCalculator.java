@@ -1,54 +1,52 @@
 package chess;
 
-import java.util.Collection;
+public class BishopMovesCalculator extends PieceMovesCalculator{
 
-class BishopMovesCalculator extends PieceMovesCalculator {
+    public BishopMovesCalculator(ChessBoard board, ChessPosition myPosition) {
+        super(board, myPosition);
+    }
 
-    public BishopMovesCalculator() {}
-
-    @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> moves = new java.util.ArrayList<>();
+    public void pieceMoves() {
+        // Initialize newPosition
         ChessPosition newPosition = myPosition.copy();
         // Check up and to the left
-        newPosition.updatePosition(1, -1);
-        while(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-            if (isCapture(board, myPosition, newPosition)) {
+        newPosition.update(1, -1);
+        while (validMove(newPosition)) {
+            addMove(newPosition, null);
+            if (isCapture(newPosition)) {
                 break;
             }
-            newPosition.updatePosition(1, -1);
+            newPosition.update(1, -1);
         }
         // Check up and to the right
-        newPosition.updatePosition(myPosition);
-        newPosition.updatePosition(1, 1);
-        while(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-            if (isCapture(board, myPosition, newPosition)) {
+        newPosition.update(myPosition);
+        newPosition.update(1, 1);
+        while (validMove(newPosition)) {
+            addMove(newPosition, null);
+            if (isCapture(newPosition)) {
                 break;
             }
-            newPosition.updatePosition(1, 1);
-        }
-        // Check down and to the left
-        newPosition.updatePosition(myPosition);
-        newPosition.updatePosition(-1, -1);
-        while(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-            if (isCapture(board, myPosition, newPosition)) {
-                break;
-            }
-            newPosition.updatePosition(-1, -1);
+            newPosition.update(1, 1);
         }
         // Check down and to the right
-        newPosition.updatePosition(myPosition);
-        newPosition.updatePosition(-1, 1);
-        while(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-            if (isCapture(board, myPosition, newPosition)) {
+        newPosition.update(myPosition);
+        newPosition.update(-1, 1);
+        while (validMove(newPosition)) {
+            addMove(newPosition, null);
+            if (isCapture(newPosition)) {
                 break;
             }
-            newPosition.updatePosition(-1, 1);
+            newPosition.update(-1, 1);
         }
-        return moves;
+        // Check down and to the left
+        newPosition.update(myPosition);
+        newPosition.update(-1, -1);
+        while (validMove(newPosition)) {
+            addMove(newPosition, null);
+            if (isCapture(newPosition)) {
+                break;
+            }
+            newPosition.update(-1, -1);
+        }
     }
 }

@@ -1,184 +1,161 @@
 package chess;
 
-import java.util.Collection;
-
 public class PawnMovesCalculator extends PieceMovesCalculator {
 
-    public PawnMovesCalculator() {}
+    public PawnMovesCalculator(ChessBoard board, ChessPosition myPosition) {super(board, myPosition);}
 
-    @Override
-    public boolean isCapture(ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
-        // What pieces are we working with?
-        ChessPiece pieceAtStart = board.getPiece(startPosition);
-        ChessPiece pieceAtEnd = board.getPiece(endPosition);
-        // Check if there is a piece at endPosition
-        if (pieceAtEnd == null || startPosition.getColumn() == endPosition.getColumn()) {
-            return false;
+    public void pieceMoves() {
+        // Initialize newPosition
+        ChessPosition newPosition = myPosition.copy();
+        // Find color of the starting piece
+        ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
+        // If myColor is white, we are going up
+        if (myColor == ChessGame.TeamColor.WHITE) {
+            // Check up
+            newPosition.update(1, 0);
+            if (validMove(newPosition)) {
+                // Check Promotions
+                if (newPosition.getRow() == 8) {
+                    addMove(newPosition, ChessPiece.PieceType.KNIGHT);
+                    addMove(newPosition, ChessPiece.PieceType.BISHOP);
+                    addMove(newPosition, ChessPiece.PieceType.QUEEN);
+                    addMove(newPosition, ChessPiece.PieceType.ROOK);
+                }
+                else {
+                    addMove(newPosition, null);
+                }
+            }
+            // Check if on starting line and previous move was valid
+            if (myPosition.getRow() == 2 && validMove(newPosition)) {
+                newPosition.update(1, 0);
+                if (validMove(newPosition)) {
+                    addMove(newPosition, null);
+                }
+            }
+            newPosition.update(myPosition);
+            // Check up and left
+            newPosition.update(1, -1);
+            if (validMove(newPosition)) {
+                // Check Promotions
+                if (newPosition.getRow() == 8) {
+                    addMove(newPosition, ChessPiece.PieceType.KNIGHT);
+                    addMove(newPosition, ChessPiece.PieceType.BISHOP);
+                    addMove(newPosition, ChessPiece.PieceType.QUEEN);
+                    addMove(newPosition, ChessPiece.PieceType.ROOK);
+                }
+                else {
+                    addMove(newPosition, null);
+                }
+            }
+            // Check up and right
+            newPosition.update(0, 2);
+            if (validMove(newPosition)) {
+                // Check Promotions
+                if (newPosition.getRow() == 8) {
+                    addMove(newPosition, ChessPiece.PieceType.KNIGHT);
+                    addMove(newPosition, ChessPiece.PieceType.BISHOP);
+                    addMove(newPosition, ChessPiece.PieceType.QUEEN);
+                    addMove(newPosition, ChessPiece.PieceType.ROOK);
+                }
+                else {
+                    addMove(newPosition, null);
+                }
+            }
         }
-        return true;
+        // If myColor is black, we are going down
+        if (myColor == ChessGame.TeamColor.BLACK) {
+            // Check down
+            newPosition.update(-1, 0);
+            if (validMove(newPosition)) {
+                // Check Promotions
+                if (newPosition.getRow() == 1) {
+                    addMove(newPosition, ChessPiece.PieceType.KNIGHT);
+                    addMove(newPosition, ChessPiece.PieceType.BISHOP);
+                    addMove(newPosition, ChessPiece.PieceType.QUEEN);
+                    addMove(newPosition, ChessPiece.PieceType.ROOK);
+                }
+                else {
+                    addMove(newPosition, null);
+                }
+            }
+            // Check if on starting line and previous move was valid
+            if (myPosition.getRow() == 7 && validMove(newPosition)) {
+                newPosition.update(-1, 0);
+                if (validMove(newPosition)) {
+                    addMove(newPosition, null);
+                }
+            }
+            newPosition.update(myPosition);
+            // Check down and left
+            newPosition.update(-1, -1);
+            if (validMove(newPosition)) {
+                // Check Promotions
+                if (newPosition.getRow() == 1) {
+                    addMove(newPosition, ChessPiece.PieceType.KNIGHT);
+                    addMove(newPosition, ChessPiece.PieceType.BISHOP);
+                    addMove(newPosition, ChessPiece.PieceType.QUEEN);
+                    addMove(newPosition, ChessPiece.PieceType.ROOK);
+                }
+                else {
+                    addMove(newPosition, null);
+                }
+            }
+            // Check down and right
+            newPosition.update(0, 2);
+            if (validMove(newPosition)) {
+                // Check Promotions
+                if (newPosition.getRow() == 1) {
+                    addMove(newPosition, ChessPiece.PieceType.KNIGHT);
+                    addMove(newPosition, ChessPiece.PieceType.BISHOP);
+                    addMove(newPosition, ChessPiece.PieceType.QUEEN);
+                    addMove(newPosition, ChessPiece.PieceType.ROOK);
+                }
+                else {
+                    addMove(newPosition, null);
+                }
+            }
+        }
     }
 
     @Override
-    public boolean validMove(ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
-        // Check if position is on the board
-        if (endPosition.getRow() < 1 || endPosition.getRow() > 8) {
+    public boolean validMove(ChessPosition newPosition) {
+        // Check if end position is on the board
+        if (newPosition.getRow() < 1 || newPosition.getRow() > 8) {
             return false;
         }
-        if (endPosition.getColumn() < 1 || endPosition.getColumn() > 8) {
+        if (newPosition.getColumn() < 1 || newPosition.getColumn() > 8) {
             return false;
         }
         // What pieces are we working with?
-        ChessPiece pieceAtStart = board.getPiece(startPosition);
-        ChessPiece pieceAtEnd = board.getPiece(endPosition);
-        // Check if there is a piece at endPosition
-        if (pieceAtEnd == null) {
-            if (startPosition.getColumn() != endPosition.getColumn()) {
-                return false;
-            }
+        ChessPiece pieceAtEnd = board.getPiece(newPosition);
+        // Are we staying in the same column?
+        if (myPosition.getColumn() == newPosition.getColumn() && pieceAtEnd == null) {
             return true;
         }
-        if (pieceAtStart.getTeamColor() == pieceAtEnd.getTeamColor()) {
-            return false;
-        }
-        // Can't check if it is a capture separately
-        if (isCapture( board, startPosition, endPosition)) {
+        // If not the same column, are we capturing anything?
+        if (isCapture(newPosition)) {
             return true;
         }
+        // Else, it cannot be a valid move
         return false;
     }
 
     @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> moves = new java.util.ArrayList<>();
-        ChessPosition newPosition = myPosition.copy();
-        // Check color of pawn
-        ChessGame.TeamColor pieceColor = board.getPiece(myPosition).getTeamColor();
-        // White moves up
-        if (pieceColor == ChessGame.TeamColor.WHITE) {
-            // Check directly up
-            newPosition.updatePosition(1, 0);
-            if (validMove(board, myPosition, newPosition)) {
-                if (validMove(board, myPosition, newPosition)) {
-                    if (newPosition.getRow() == 8) {
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.QUEEN));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.KNIGHT));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.ROOK));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.BISHOP));
-                    }
-                    else {
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-                    }
-                }
-            }
-            // Check if pawn is on start and up 2
-            newPosition.updatePosition(1, 0);
-            ChessPosition intermediatePosition = myPosition.copy();
-            intermediatePosition.updatePosition(1, 0);
-            if (myPosition.getRow() == 2 && validMove(board, myPosition, newPosition)
-                    && validMove(board, myPosition, intermediatePosition)) {
-                if (validMove(board, myPosition, newPosition)) {
-                    if (newPosition.getRow() == 8) {
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.QUEEN));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.KNIGHT));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.ROOK));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.BISHOP));
-                    }
-                    else {
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-                    }
-                }
-            }
-            newPosition.updatePosition(myPosition);
-            // Check if up left is capture
-            newPosition.updatePosition(1, -1);
-            if (validMove(board, myPosition, newPosition)) {
-                if (newPosition.getRow() == 8) {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.QUEEN));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.KNIGHT));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.ROOK));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.BISHOP));
-                }
-                else {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-                }
-            }
-            newPosition.updatePosition(myPosition);
-            // Check if up right is capture
-            newPosition.updatePosition(1, 1);
-            if (validMove(board, myPosition, newPosition)) {
-                if (newPosition.getRow() == 8) {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.QUEEN));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.KNIGHT));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.ROOK));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.BISHOP));
-                }
-                else {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-                }
-            }
+    public boolean isCapture(ChessPosition newPosition) {
+        // What pieces are we working with?
+        ChessPiece pieceAtEnd = board.getPiece(newPosition);
+        // If there is no piece to capture, false
+        if (pieceAtEnd == null) {
+            return false;
         }
-        // Black moves down
-        if (pieceColor == ChessGame.TeamColor.BLACK) {
-            // Check directly down
-            newPosition.updatePosition(-1, 0);
-            if (validMove(board, myPosition, newPosition)) {
-                if (validMove(board, myPosition, newPosition)) {
-                    if (newPosition.getRow() == 1) {
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.QUEEN));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.KNIGHT));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.ROOK));
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.BISHOP));
-                    }
-                    else {
-                        moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-                    }
-                }
-            }
-            // Check if pawn is on start and up 2
-            newPosition.updatePosition(-1, 0);
-            ChessPosition intermediatePosition = myPosition.copy();
-            intermediatePosition.updatePosition(-1, 0);
-            if (myPosition.getRow() == 7 && validMove(board, myPosition, newPosition)
-                    && validMove(board, myPosition, intermediatePosition)) {
-                if (newPosition.getRow() == 1) {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.QUEEN));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.KNIGHT));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.ROOK));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.BISHOP));
-                }
-                else {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-                }
-            }
-            newPosition.updatePosition(myPosition);
-            // Check if down left is capture
-            newPosition.updatePosition(-1, -1);
-            if (validMove(board, myPosition, newPosition)) {
-                if (newPosition.getRow() == 1) {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.QUEEN));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.KNIGHT));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.ROOK));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.BISHOP));
-                }
-                else {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-                }
-            }
-            newPosition.updatePosition(myPosition);
-            // Check if down right is capture
-            newPosition.updatePosition(-1, 1);
-            if (validMove(board, myPosition, newPosition)) {
-                if (newPosition.getRow() == 1) {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.QUEEN));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.KNIGHT));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.ROOK));
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), ChessPiece.PieceType.BISHOP));
-                }
-                else {
-                    moves.add(new ChessMove(myPosition, newPosition.copy(), null));
-                }
-            }
+        // What colors are we working with?
+        ChessGame.TeamColor startColor = pieceAtStart.getTeamColor();
+        ChessGame.TeamColor endColor = pieceAtEnd.getTeamColor();
+        // If the pieces are the same color or the column is the same, not a capture
+        if (startColor == endColor || myPosition.getColumn() == newPosition.getColumn()) {
+            return false;
         }
-        return moves;
+        // Otherwise it's good
+        return true;
     }
 }

@@ -1,62 +1,51 @@
 package chess;
 
-import java.util.Collection;
-
 public class KingMovesCalculator extends PieceMovesCalculator{
 
-    public KingMovesCalculator() {}
+    public KingMovesCalculator(ChessBoard board, ChessPosition myPosition) {super(board, myPosition);}
 
-    @Override
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> moves = new java.util.ArrayList<>();
+    public void pieceMoves() {
+        // Initialize newPosition
         ChessPosition newPosition = myPosition.copy();
         // Check up and left
-        newPosition.updatePosition(1, -1);
-        if(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        newPosition.update(1, -1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
         // Check up
-        newPosition.updatePosition(1, 0);
-        if(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        newPosition.update(0, 1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
         // Check up and right
-        newPosition.updatePosition(1, 1);
-        if(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        newPosition.update(0, 1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
         // Check right
-        newPosition.updatePosition(0, 1);
-        if(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        newPosition.update(-1, 0);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
         // Check down and right
-        newPosition.updatePosition(-1, 1);
-        if(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        newPosition.update(-1, 0);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
         // Check down
-        newPosition.updatePosition(-1, 0);
-        if(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        newPosition.update(0, -1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
         // Check down and left
-        newPosition.updatePosition(-1, -1);
-        if(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        newPosition.update(0, -1);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        newPosition.updatePosition(myPosition);
         // Check left
-        newPosition.updatePosition(0, -1);
-        if(this.validMove(board, myPosition, newPosition)) {
-            moves.add(new ChessMove(myPosition, newPosition.copy(), null));
+        newPosition.update(1, 0);
+        if (validMove(newPosition)) {
+            addMove(newPosition, null);
         }
-        return moves;
     }
 }

@@ -34,12 +34,12 @@ public class ChessPosition {
         return column;
     }
 
-    public void updatePosition(int rowChange, int columnChange) {
-        this.row = this.getRow() + rowChange;
-        this.column = this.getColumn() + columnChange;
+    public void update(int changeRow, int changeColumn) {
+        this.row = row + changeRow;
+        this.column = column + changeColumn;
     }
 
-    public void updatePosition(ChessPosition position) {
+    public void update(ChessPosition position) {
         this.row = position.getRow();
         this.column = position.getColumn();
     }

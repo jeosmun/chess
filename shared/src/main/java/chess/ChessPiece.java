@@ -11,10 +11,10 @@ import java.util.Objects;
  */
 public class ChessPiece {
 
-    ChessGame.TeamColor pieceColor;
-    ChessPiece.PieceType type;
+    private final ChessGame.TeamColor pieceColor;
+    private final PieceType type;
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
     }
@@ -53,32 +53,31 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> moves = new java.util.ArrayList<>();
         if (board.getPiece(myPosition).getPieceType() == PieceType.BISHOP) {
-            BishopMovesCalculator calc = new BishopMovesCalculator();
-            moves = calc.pieceMoves(board, myPosition);
+            BishopMovesCalculator calc = new BishopMovesCalculator(board, myPosition);
+            return calc.moves;
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.KING) {
-            KingMovesCalculator calc = new KingMovesCalculator();
-            moves = calc.pieceMoves(board, myPosition);
+            KingMovesCalculator calc = new KingMovesCalculator(board, myPosition);
+            return calc.moves;
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.KNIGHT) {
-            KnightMovesCalculator calc = new KnightMovesCalculator();
-            moves = calc.pieceMoves(board, myPosition);
+            KnightMovesCalculator calc = new KnightMovesCalculator(board, myPosition);
+            return calc.moves;
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.PAWN) {
-            PawnMovesCalculator calc = new PawnMovesCalculator();
-            moves = calc.pieceMoves(board, myPosition);
+            PawnMovesCalculator calc = new PawnMovesCalculator(board, myPosition);
+            return calc.moves;
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.QUEEN) {
-            QueenMovesCalculator calc = new QueenMovesCalculator();
-            moves = calc.pieceMoves(board, myPosition);
+            QueenMovesCalculator calc = new QueenMovesCalculator(board, myPosition);
+            return calc.moves;
         }
         if (board.getPiece(myPosition).getPieceType() == PieceType.ROOK) {
-            RookMovesCalculator calc = new RookMovesCalculator();
-            moves = calc.pieceMoves(board, myPosition);
+            RookMovesCalculator calc = new RookMovesCalculator(board, myPosition);
+            return calc.moves;
         }
-        return moves;
+        return new java.util.ArrayList<>();
     }
 
     @Override

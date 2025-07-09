@@ -94,6 +94,14 @@ public class ChessBoard {
         return new ChessBoard(newSquares);
     }
 
+    public void update(ChessBoard board) {
+        for (int i = 0; i <= 7; i++) {
+            for (int j = 0; j <= 7; j++) {
+                this.squares[i][j] = board.squares[i][j];
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

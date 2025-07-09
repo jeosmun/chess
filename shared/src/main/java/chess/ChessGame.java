@@ -85,6 +85,14 @@ public class ChessGame {
         if(move == null) {
             throw new InvalidMoveException();
         }
+        // Check if there is a piece at the starting position
+        if (board.getPiece(move.getStartPosition()) == null) {
+            throw new InvalidMoveException();
+        }
+        // Check if piece at start is on the wrong team for whose turn it is
+        if (board.getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()) {
+            throw new InvalidMoveException();
+        }
         // Check if move is a valid move
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
         if(!moves.contains(move)) {
@@ -93,6 +101,12 @@ public class ChessGame {
         // Try to execute the move, catch errors if they appear
         try {
             applyMove(move);
+            if (getTeamTurn() == TeamColor.WHITE) {
+                setTeamTurn(TeamColor.BLACK);
+            }
+            else {
+                setTeamTurn(TeamColor.WHITE);
+            }
         }
         catch(Exception ex){
             throw new InvalidMoveException();

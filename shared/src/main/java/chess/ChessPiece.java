@@ -93,4 +93,12 @@ public class ChessPiece {
     public int hashCode() {
         return Objects.hash(pieceColor, type);
     }
+
+    public String toString() {
+        var pieceString = new StringBuilder();
+        pieceString.append(pieceColor);
+        pieceString.append(", ");
+        pieceString.append(type);
+        return pieceString.toString();
+    }
 }

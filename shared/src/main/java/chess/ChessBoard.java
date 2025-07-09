@@ -17,6 +17,10 @@ public class ChessBoard {
 
     }
 
+    private ChessBoard(ChessPiece[][] squares) {
+        this.squares = squares;
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -78,6 +82,16 @@ public class ChessBoard {
         addPiece(new ChessPosition(7, 6), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         addPiece(new ChessPosition(7, 7), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         addPiece(new ChessPosition(7, 8), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+    }
+
+    public ChessBoard copy() {
+        ChessPiece[][] newSquares = new ChessPiece[8][8];
+        for (int i = 0; i <= 7; i++) {
+            for (int j = 0; j <= 7; j++) {
+                newSquares[i][j] = squares[i][j];
+            }
+        }
+        return new ChessBoard(newSquares);
     }
 
     @Override

@@ -148,6 +148,23 @@ public class ChessGame {
         else {
             kingPosition = blackKingPosition.copy();
         }
+//        Collection<ChessMove> validMoves = new java.util.ArrayList<>();
+//        Collection<ChessPosition> myPositions = new java.util.ArrayList<>();
+//        for (int i = 1; i <= 8; i++) {
+//            for (int j = 1; j <= 8; j++) {
+//                ChessPosition currentPosition = new ChessPosition(i, j);
+//                ChessPiece currentPiece = board.getPiece(currentPosition);
+//                if (currentPiece == null) {
+//                    continue;
+//                }
+//                if (currentPiece.getTeamColor() == teamColor) {
+//                    myPositions.add(currentPosition);
+//                }
+//            }
+//        }
+//        for (ChessPosition position : myPositions) {
+//            validMoves.addAll(validMoves(position));
+//        }
         return isInCheck(teamColor) && validMoves(kingPosition).isEmpty();
     }
 

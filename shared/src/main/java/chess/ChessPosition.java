@@ -61,4 +61,14 @@ public class ChessPosition {
     public int hashCode() {
         return Objects.hash(row, column);
     }
+
+    public String toString() {
+        var positionString = new StringBuilder();
+        positionString.append("(");
+        positionString.append(row);
+        positionString.append(", ");
+        positionString.append(column);
+        positionString.append(")");
+        return positionString.toString();
+    }
 }

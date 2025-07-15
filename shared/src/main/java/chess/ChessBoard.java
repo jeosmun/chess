@@ -21,6 +21,10 @@ public class ChessBoard {
         this.squares = squares;
     }
 
+    // Copy constructors
+    // public ChessBoard(ChessBoard other) {this.squares = other.squares;}
+    // Look into docs about copying and deep-copying
+
     /**
      * Adds a chess piece to the chessboard
      *

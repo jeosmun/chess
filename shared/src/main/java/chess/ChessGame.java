@@ -59,6 +59,7 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = new java.util.ArrayList<>();
+        // ChessBoard testBoard = board.copy() and use this to test for valid moves
         ChessBoard originalBoard = board.copy();
         ChessPosition originalWhiteKingPosition = whiteKingPosition.copy();
         ChessPosition originalBlackKingPosition = blackKingPosition.copy();

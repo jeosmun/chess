@@ -7,7 +7,10 @@ public class Server {
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
-        Spark.staticFiles.location("web");
+        // Why did this from the given code note work?
+        // Spark.staticFiles.location("/web");
+
+        Spark.staticFiles.externalLocation("/Users/osmun/Documents/cs240/chess/server/src/main/resources/web");
 
         // Register your endpoints and handle exceptions here.
 

@@ -17,4 +17,9 @@ public class SQLGameDAO implements GameDAO{
     public GameData getGame(int gameID) throws DataAccessException {
         return null;
     }
+
+    @Override
+    public void updateGame(GameData gameData) {
+
+    }
 }

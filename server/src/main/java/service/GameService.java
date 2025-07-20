@@ -18,24 +18,17 @@ import java.util.Objects;
 public class GameService {
     private final GameDAO gameDAO = new MemoryGameDAO();
 
-    public ListGamesResult listGames(ListGamesRequest listGamesRequest) {
-        try {
-            ArrayList<GameData> gameList = gameDAO.listGames();
-            return new ListGamesResult(gameList);
-        }
-        catch (Exception ex) {
-            return null;
-        }
+    public ListGamesResult listGames(ListGamesRequest listGamesRequest) throws DataAccessException {
+        ArrayList<GameData> gameList = gameDAO.listGames();
+        return new ListGamesResult(gameList);
     }
 
-    public CreateGameResult createGame(CreateGameRequest createGameRequest) {
-        try {
-            GameData gameData = gameDAO.createGame(createGameRequest.gameName());
-            return new CreateGameResult(gameData.gameID());
+    public CreateGameResult createGame(CreateGameRequest createGameRequest) throws DataAccessException {
+        if (createGameRequest.gameName() == null) {
+            throw new RequestException("Error: bad request");
         }
-        catch (Exception ex) {
-            return null;
-        }
+        GameData gameData = gameDAO.createGame(createGameRequest.gameName());
+        return new CreateGameResult(gameData.gameID());
     }
 
     public void joinGame(JoinGameRequest joinGameRequest) throws DataAccessException {

@@ -38,14 +38,13 @@ public class UserService {
         return null;
     }
 
-    public void logout(LogoutRequest logoutRequest) {
-        try {
-            AuthData authData = authDAO.getAuth(logoutRequest.authToken());
-            authDAO.deleteAuth(authData);
+    public void logout(LogoutRequest logoutRequest) throws DataAccessException {
+        AuthData authData = authDAO.getAuth(logoutRequest.authToken());
+        if (authData == null) {
+            throw new AuthException("Error: Unauthorized");
         }
-        catch (Exception ex) {
+        authDAO.deleteAuth(authData);
 
-        }
     }
 
     public void clear() {

@@ -132,105 +132,70 @@ public class Server {
         return new Gson().toJson(loginResult);
     }
 
-    private Object logout(Request req, Response res) {
-        try {
-            String authToken = req.headers("authorization");
-            if (userService.getAuth(authToken) == null) {
-                throw new AuthException("Error: unauthorized");
-            }
-            userService.logout(new LogoutRequest(authToken));
+    private Object logout(Request req, Response res) throws DataAccessException {
+        String authToken = req.headers("authorization");
+        authenticate(authToken);
+        userService.logout(new LogoutRequest(authToken));
 
-            res.status(200);
-            res.body("{}");
+        res.status(200);
+        res.body("{}");
 
-            return "{}";
-        }
-        catch (DataAccessException ex) {
-            // Do something with the DataAccessException
-        }
-        return null;
+        return "{}";
     }
 
-    private Object listGames(Request req, Response res) {
-        try {
-            String authToken = req.headers("authorization");
-            if (userService.getAuth(authToken) == null) {
-                throw new AuthException("Error: unauthorized");
-            }
-            ListGamesResult listGamesResult = gameService.listGames(new ListGamesRequest(authToken));
+    private Object listGames(Request req, Response res) throws DataAccessException {
+        String authToken = req.headers("authorization");
+        authenticate(authToken);
+        ListGamesResult listGamesResult = gameService.listGames(new ListGamesRequest(authToken));
 
-            res.status(200);
-            res.body(new Gson().toJson(listGamesResult));
-            return new Gson().toJson(listGamesResult);
-        }
-        catch (DataAccessException ex) {
-            return null;
-        }
+        res.status(200);
+        res.body(new Gson().toJson(listGamesResult));
+        return new Gson().toJson(listGamesResult);
     }
 
-    private Object createGame(Request req, Response res) {
-        try {
-            String authToken = req.headers("authorization");
-            if (userService.getAuth(authToken) == null) {
-                throw new AuthException("Error: unauthorized");
-            }
-            res.type("application/json");
-            var body = getBody(req, Map.class);
+    private Object createGame(Request req, Response res) throws DataAccessException {
+        String authToken = req.headers("authorization");
+        authenticate(authToken);
+        res.type("application/json");
+        var body = getBody(req, Map.class);
 
-            if (body.get("gameName") == null) {
-                throw new RequestException("Error: bad request");
-            }
-
-            var gameName = (String) body.get("gameName");
-
-            CreateGameResult createGameResult = gameService.createGame(new CreateGameRequest(gameName));
-            res.status(200);
-            res.body(new Gson().toJson(createGameResult));
-            return new Gson().toJson(createGameResult);
+        if (body.get("gameName") == null) {
+            throw new RequestException("Error: bad request");
         }
-        catch (DataAccessException ex) {
-            return null;
-        }
+
+        var gameName = (String) body.get("gameName");
+
+        CreateGameResult createGameResult = gameService.createGame(new CreateGameRequest(gameName));
+        res.status(200);
+        res.body(new Gson().toJson(createGameResult));
+        return new Gson().toJson(createGameResult);
     }
 
-    private Object joinGame(Request req, Response res) {
-        try {
-            String authToken = req.headers("authorization");
-            if (userService.getAuth(authToken) == null) {
-                throw new AuthException("Error: unauthorized");
-            }
-            res.type("application/json");
-            var body = getBody(req, Map.class);
+    private Object joinGame(Request req, Response res) throws DataAccessException {
+        String authToken = req.headers("authorization");
+        authenticate(authToken);
+        res.type("application/json");
+        var body = getBody(req, Map.class);
 
-            if (body.get("playerColor") == null || body.get("gameID") == null) {
-                throw new RequestException("Error: bad request");
-            }
-
-            JoinGameRequest joinGameRequest = new JoinGameRequest((String) body.get("playerColor"),
-                    (double) body.get("gameID"), userService.getAuth(authToken).username());
-
-            gameService.joinGame(joinGameRequest);
-
-            res.status(200);
-            res.body("{}");
-
-            return "{}";
+        if (body.get("playerColor") == null || body.get("gameID") == null) {
+            throw new RequestException("Error: bad request");
         }
-        catch (DataAccessException ex) {
-            return null;
-        }
+
+        JoinGameRequest joinGameRequest = new JoinGameRequest((String) body.get("playerColor"),
+                (double) body.get("gameID"), userService.getAuth(authToken).username());
+
+        gameService.joinGame(joinGameRequest);
+
+        res.status(200);
+        res.body("{}");
+
+        return "{}";
     }
 
-    private boolean authenticate(String authToken) {
-        try {
-            if (userService.getAuth(authToken) == null) {
-                // Return a message about being unauthorized
-            }
+    private void authenticate(String authToken) throws DataAccessException {
+        if (userService.getAuth(authToken) == null) {
+            throw new AuthException("Error: unauthorized");
         }
-        catch (DataAccessException ex) {
-            // Do something with the DataAccessException
-        }
-        return false;
     }
 
     private static <T> T getBody(Request req, Class<T> modelClass) {

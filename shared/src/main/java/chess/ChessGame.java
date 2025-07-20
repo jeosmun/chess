@@ -167,25 +167,8 @@ public class ChessGame {
         else {
             kingPosition = blackKingPosition.copy();
         }
-        Collection<ChessMove> validMoves = new java.util.ArrayList<>();
-        Collection<ChessPosition> myPositions = new java.util.ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <= 8; j++) {
-                ChessPosition currentPosition = new ChessPosition(i, j);
-                ChessPiece currentPiece = board.getPiece(currentPosition);
-                if (currentPiece == null) {
-                    continue;
-                }
-                if (currentPiece.getTeamColor() == teamColor) {
-                    myPositions.add(currentPosition);
-                }
-            }
-        }
-        for (ChessPosition position : myPositions) {
-            validMoves.addAll(validMoves(position));
-        }
+        Collection<ChessMove> validMoves = getValidMoves(teamColor);
         return isInCheck(teamColor) && validMoves.isEmpty();
-//        return isInCheck(teamColor) && validMoves(kingPosition).isEmpty();
     }
 
     /**
@@ -196,23 +179,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        Collection<ChessMove> validMoves = new java.util.ArrayList<>();
-        Collection<ChessPosition> myPositions = new java.util.ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <= 8; j++) {
-                ChessPosition currentPosition = new ChessPosition(i, j);
-                ChessPiece currentPiece = board.getPiece(currentPosition);
-                if (currentPiece == null) {
-                    continue;
-                }
-                if (currentPiece.getTeamColor() == teamColor) {
-                    myPositions.add(currentPosition);
-                }
-            }
-        }
-        for (ChessPosition position : myPositions) {
-            validMoves.addAll(validMoves(position));
-        }
+        Collection<ChessMove> validMoves = getValidMoves(teamColor);
         return !isInCheck(teamColor) && validMoves.isEmpty();
     }
 
@@ -289,6 +256,27 @@ public class ChessGame {
     @Override
     public int hashCode() {
         return Objects.hash(board, teamTurn);
+    }
+
+    public Collection<ChessMove> getValidMoves(TeamColor teamColor) {
+        Collection<ChessMove> validMoves = new java.util.ArrayList<>();
+        Collection<ChessPosition> myPositions = new java.util.ArrayList<>();
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition currentPosition = new ChessPosition(i, j);
+                ChessPiece currentPiece = board.getPiece(currentPosition);
+                if (currentPiece == null) {
+                    continue;
+                }
+                if (currentPiece.getTeamColor() == teamColor) {
+                    myPositions.add(currentPosition);
+                }
+            }
+        }
+        for (ChessPosition position : myPositions) {
+            validMoves.addAll(validMoves(position));
+        }
+        return validMoves;
     }
 
 //    @Override

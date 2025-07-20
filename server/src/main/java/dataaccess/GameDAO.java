@@ -10,4 +10,6 @@ public interface GameDAO {
     GameData getGame(int gameID) throws DataAccessException;
 
     void updateGame(GameData gameData);
+
+    java.util.ArrayList<GameData> listGames() throws DataAccessException;
 }

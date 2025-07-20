@@ -2,6 +2,8 @@ package dataaccess;
 
 import model.GameData;
 
+import java.util.ArrayList;
+
 public class SQLGameDAO implements GameDAO{
     @Override
     public void clear() throws DataAccessException {
@@ -21,5 +23,10 @@ public class SQLGameDAO implements GameDAO{
     @Override
     public void updateGame(GameData gameData) {
 
+    }
+
+    @Override
+    public ArrayList<GameData> listGames() throws DataAccessException {
+        return null;
     }
 }

@@ -1,6 +1,8 @@
 package dataaccess;
 
 import model.GameData;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.lang.Integer;
 import chess.ChessGame;
@@ -36,5 +38,12 @@ public class MemoryGameDAO implements GameDAO{
     @Override
     public void updateGame(GameData gameData) {
         gameDB.replace(gameData.gameID(), gameData);
+    }
+
+    @Override
+    public ArrayList<GameData> listGames() throws DataAccessException {
+        ArrayList<GameData> gameList = new ArrayList<>();
+        gameDB.forEach((key, value) -> gameList.add(value));
+        return gameList;
     }
 }

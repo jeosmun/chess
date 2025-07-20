@@ -15,25 +15,17 @@ public class UserService {
     private final UserDAO userDAO = new MemoryUserDAO();
     private final AuthDAO authDAO = new MemoryAuthDAO();
 
-    public RegisterResult register(RegisterRequest registerRequest) {
-        try {
-            AuthData authData = authDAO.createAuth(registerRequest.username());
-            userDAO.createUser(registerRequest.username(), registerRequest.password(), registerRequest.email());
-            return new RegisterResult(authData.username(), authData.authToken());
-        }
-        catch (DataAccessException ex) {
-
-        }
-        return null;
+    public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException, RequestConflictException {
+        AuthData authData = authDAO.createAuth(registerRequest.username());
+        userDAO.createUser(registerRequest.username(), registerRequest.password(), registerRequest.email());
+        return new RegisterResult(authData.username(), authData.authToken());
     }
 
     public LoginResult login(LoginRequest loginRequest) {
         try {
             UserData userData = userDAO.getUser(loginRequest.username());
-            System.out.println(userData.toString());
             if (userData == null || !Objects.equals(userData.password(), loginRequest.password())) {
-                System.out.println("Error: Unauthorized");
-                return null;
+                throw new AuthException("Error: unauthorized");
             }
             else {
                 AuthData authData = authDAO.createAuth(loginRequest.username());
@@ -47,7 +39,23 @@ public class UserService {
     }
 
     public void logout(LogoutRequest logoutRequest) {
+        try {
+            AuthData authData = authDAO.getAuth(logoutRequest.authToken());
+            authDAO.deleteAuth(authData);
+        }
+        catch (Exception ex) {
 
+        }
+    }
+
+    public void clear() {
+        try {
+            userDAO.clear();
+            authDAO.clear();
+        }
+        catch (Exception ex) {
+
+        }
     }
 
     public AuthData getAuth(String authToken) throws DataAccessException {

@@ -278,14 +278,4 @@ public class ChessGame {
         }
         return validMoves;
     }
-
-//    @Override
-//    public String toString() {
-//        return "ChessGame{" +
-//                "board=" + board +
-//                ", teamTurn=" + teamTurn +
-//                ", whiteKingPosition=" + whiteKingPosition +
-//                ", blackKingPosition=" + blackKingPosition +
-//                '}';
-//    }
 }

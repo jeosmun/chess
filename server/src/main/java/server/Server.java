@@ -14,11 +14,19 @@ import spark.*;
 import java.util.Map;
 
 public class Server {
-    private final UserService userService = new UserService();
-    private final GameService gameService = new GameService();
-    private final ClearService clearService = new ClearService(userService, gameService);
+    private UserService userService;
+    private GameService gameService;
+    private ClearService clearService;
 
-    public Server() throws DataAccessException {
+    public Server() {
+        try {
+            userService = new UserService();
+            gameService = new GameService();
+            clearService = new ClearService(userService, gameService);
+        }
+        catch (DataAccessException ex) {
+            System.out.println("Error: Unable to access chess database");
+        }
     }
 
     public int run(int desiredPort) {

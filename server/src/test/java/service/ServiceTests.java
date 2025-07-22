@@ -25,7 +25,7 @@ public class ServiceTests {
     private static UserData user2;
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws DataAccessException {
         user1 = new UserData("username1","password1","email1");
         user2 = new UserData("username2", "password2", "email2");
         gameService = new GameService();

@@ -12,8 +12,11 @@ import service.results.RegisterResult;
 import java.util.Objects;
 
 public class UserService {
-    private final UserDAO userDAO = new MemoryUserDAO();
-    private final AuthDAO authDAO = new MemoryAuthDAO();
+    private final UserDAO userDAO = new SQLUserDAO();
+    private final AuthDAO authDAO = new SQLAuthDAO();
+
+    public UserService() throws DataAccessException {
+    }
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException, RequestConflictException {
         AuthData authData = authDAO.createAuth(registerRequest.username());

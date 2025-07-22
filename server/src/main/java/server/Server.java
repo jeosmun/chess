@@ -18,6 +18,9 @@ public class Server {
     private final GameService gameService = new GameService();
     private final ClearService clearService = new ClearService(userService, gameService);
 
+    public Server() throws DataAccessException {
+    }
+
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 

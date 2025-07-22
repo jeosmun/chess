@@ -1,10 +1,7 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
-import dataaccess.GameDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.RequestConflictException;
+import dataaccess.*;
 import model.GameData;
 import service.requests.CreateGameRequest;
 import service.requests.JoinGameRequest;
@@ -16,7 +13,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GameService {
-    private final GameDAO gameDAO = new MemoryGameDAO();
+    private final GameDAO gameDAO = new SQLGameDAO();
+
+    public GameService() throws DataAccessException {
+    }
 
     public ListGamesResult listGames(ListGamesRequest listGamesRequest) throws DataAccessException {
         ArrayList<GameData> gameList = gameDAO.listGames();

@@ -29,10 +29,6 @@ public class SQLAuthDAO implements AuthDAO{
     @Override
     public AuthData createAuth(String username) throws DataAccessException {
         String authToken = UUID.randomUUID().toString();
-        AuthData authData = checkAuth(username);
-        if (authData != null) {
-            return authData;
-        }
         String insertAuth = "INSERT INTO auths (username, authtoken) VALUES (?, ?)";
         try (var conn = DatabaseManager.getConnection()) {
             try (var insertStatement = conn.prepareStatement(insertAuth)) {
@@ -70,16 +66,6 @@ public class SQLAuthDAO implements AuthDAO{
                     throw new DataAccessException(String.format("%d rows deleted from auth DB", affectedRows));
                 }
             }
-        }
-        catch (SQLException ex) {
-            throw new DataAccessException(ex.getMessage());
-        }
-    }
-
-    public AuthData checkAuth(String username) throws DataAccessException {
-        String selectAuth = "SELECT username, authtoken FROM auths WHERE username=?";
-        try {
-            return queryAuth(selectAuth, username);
         }
         catch (SQLException ex) {
             throw new DataAccessException(ex.getMessage());

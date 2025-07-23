@@ -58,12 +58,7 @@ public class GameService {
         }
     }
 
-    public void clear() {
-        try {
-            gameDAO.clear();
-        }
-        catch (Exception ex) {
-
-        }
+    public void clear() throws DataAccessException {
+        gameDAO.clear();
     }
 }

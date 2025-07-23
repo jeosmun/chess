@@ -67,22 +67,22 @@ public class Server {
     private record ErrorMessage(String message) {}
 
     private void handleDataAccessException(DataAccessException ex,Request req, Response res) {
-        res.body(new Gson().toJson(new ErrorMessage(ex.getMessage())));
+        res.body(new Gson().toJson(new ErrorMessage(String.format("Error: %s", ex.getMessage()))));
         res.status(500);
     }
 
     private void handleRequestException(RequestException ex, Request req, Response res) {
-        res.body(new Gson().toJson(new ErrorMessage(ex.getMessage())));
+        res.body(new Gson().toJson(new ErrorMessage(String.format("Error: %s", ex.getMessage()))));
         res.status(400);
     }
 
     private void handleRequestConflictException(RequestConflictException ex, Request req, Response res) {
-        res.body(new Gson().toJson(new ErrorMessage(ex.getMessage())));
+        res.body(new Gson().toJson(new ErrorMessage(String.format("Error: %s", ex.getMessage()))));
         res.status(403);
     }
 
     private void handleAuthException(AuthException ex, Request req, Response res) {
-        res.body(new Gson().toJson(new ErrorMessage(ex.getMessage())));
+        res.body(new Gson().toJson(new ErrorMessage(String.format("Error: %s", ex.getMessage()))));
         res.status(401);
     }
 
@@ -91,7 +91,7 @@ public class Server {
         Spark.awaitStop();
     }
 
-    private Object clear(Request req, Response res) {
+    private Object clear(Request req, Response res) throws DataAccessException {
         clearService.clear();
 
         res.status(200);

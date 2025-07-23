@@ -53,14 +53,9 @@ public class UserService {
 
     }
 
-    public void clear() {
-        try {
-            userDAO.clear();
-            authDAO.clear();
-        }
-        catch (Exception ex) {
-
-        }
+    public void clear() throws DataAccessException {
+        userDAO.clear();
+        authDAO.clear();
     }
 
     public AuthData getAuth(String authToken) throws DataAccessException {

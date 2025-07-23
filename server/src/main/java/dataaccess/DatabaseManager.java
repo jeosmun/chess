@@ -9,6 +9,8 @@ public class DatabaseManager {
     private static String dbPassword;
     private static String connectionUrl;
 
+    public DatabaseManager() {};
+
     /*
      * Load the database information for the db.properties file.
      */
@@ -85,7 +87,7 @@ public class DatabaseManager {
             }
         }
         catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+            throw new DataAccessException(String.format("Error , unable to configure database: %s", ex.getMessage()));
         }
     }
 }

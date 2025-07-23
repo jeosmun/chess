@@ -11,9 +11,10 @@ public class SQLAuthDAO implements AuthDAO{
         String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS auths (
+                id INT NOT NULL AUTO_INCREMENT,
                 username VARCHAR(255) NOT NULL,
                 authtoken VARCHAR(255) NOT NULL,
-                PRIMARY KEY (username)
+                PRIMARY KEY (id)
             );
             """
         };

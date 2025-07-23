@@ -42,10 +42,13 @@ public class UserService {
     }
 
     public void logout(LogoutRequest logoutRequest) throws DataAccessException {
+        System.out.println(logoutRequest);
+
         AuthData authData = authDAO.getAuth(logoutRequest.authToken());
         if (authData == null) {
             throw new AuthException("Error: Unauthorized");
         }
+        System.out.println(authData.authToken());
         authDAO.deleteAuth(authData);
 
     }

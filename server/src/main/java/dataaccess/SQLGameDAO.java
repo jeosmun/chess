@@ -33,6 +33,9 @@ public class SQLGameDAO implements GameDAO{
 
     @Override
     public GameData createGame(String gameName) throws DataAccessException {
+        if (gameName.isEmpty()) {
+            throw new DataAccessException("Game Name is empty");
+        }
         Random random = new Random();
         int gameID = random.nextInt(0, 9999);
         // Make sure we don't have a repeat gameID
@@ -80,7 +83,10 @@ public class SQLGameDAO implements GameDAO{
             try (var preparedStatement = conn.prepareStatement(update)) {
                 preparedStatement.setString(1, new Gson().toJson(gameData));
                 preparedStatement.setInt(2, gameData.gameID());
-                preparedStatement.executeUpdate();
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0 || affectedRows > 1) {
+                    throw new DataAccessException(String.format("%d rows affected in game DB", affectedRows));
+                }
             }
         }
         catch (SQLException ex) {

@@ -145,7 +145,11 @@ public class Server {
 
     private Object logout(Request req, Response res) throws DataAccessException {
         String authToken = req.headers("authorization");
+
+        System.out.printf("AuthToken from Server: %s%n", authToken);
+
         authenticate(authToken);
+
         userService.logout(new LogoutRequest(authToken));
 
         res.status(200);
@@ -204,6 +208,7 @@ public class Server {
     }
 
     private void authenticate(String authToken) throws DataAccessException {
+        System.out.println("In authenticate");
         if (userService.getAuth(authToken) == null) {
             throw new AuthException("Error: unauthorized");
         }

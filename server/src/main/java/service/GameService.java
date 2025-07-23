@@ -16,6 +16,7 @@ public class GameService {
     private final GameDAO gameDAO = new SQLGameDAO();
 
     public GameService() throws DataAccessException {
+
     }
 
     public ListGamesResult listGames(ListGamesRequest listGamesRequest) throws DataAccessException {

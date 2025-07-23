@@ -68,7 +68,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Normal User Login")
-    public void loginSuccess() {
+    public void loginSuccess() throws DataAccessException {
         LoginResult loginResult = userService.login(new LoginRequest(user1.username(), user1.password()));
 
         Assertions.assertEquals(user1.username(), loginResult.username());
@@ -83,14 +83,14 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Normal User Logout")
-    public void logoutSuccess() {
+    public void logoutSuccess() throws DataAccessException {
         LoginResult loginResult = userService.login(new LoginRequest(user1.username(), user1.password()));
         Assertions.assertDoesNotThrow(() -> userService.logout(new LogoutRequest(loginResult.authToken())));
     }
 
     @Test
     @DisplayName("Unauthorized Logout")
-    public void logoutFails() {
+    public void logoutFails() throws DataAccessException {
         LoginResult loginResult = userService.login(new LoginRequest(user1.username(), user1.password()));
         Assertions.assertThrows(AuthException.class, () -> userService.logout(new LogoutRequest(null)));
     }
@@ -150,7 +150,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Game Does Not Exist")
-    public void gameDoesNotExist() {
+    public void gameDoesNotExist() throws DataAccessException {
         LoginResult loginResult = userService.login(new LoginRequest(user1.username(), user1.password()));
 
         Assertions.assertThrows(RequestException.class, () -> gameService.joinGame(

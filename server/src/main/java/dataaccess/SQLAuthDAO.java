@@ -28,6 +28,10 @@ public class SQLAuthDAO implements AuthDAO{
     @Override
     public AuthData createAuth(String username) throws DataAccessException {
         String authToken = UUID.randomUUID().toString();
+        AuthData authData = checkAuth(username);
+        if (authData != null) {
+            return authData;
+        }
         String insertAuth = "INSERT INTO auths (username, authtoken) VALUES (?, ?)";
         try (var conn = DatabaseManager.getConnection()) {
             try (var insertStatement = conn.prepareStatement(insertAuth)) {
@@ -45,18 +49,8 @@ public class SQLAuthDAO implements AuthDAO{
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
         String selectAuth = "SELECT username, authtoken FROM auths WHERE authtoken=?";
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var selectStatement = conn.prepareStatement(selectAuth)) {
-                selectStatement.setString(1, authToken);
-                try (var rs = selectStatement.executeQuery()) {
-                    if (!rs.next()) {
-                        return null;
-                    }
-                    String resultUsername = rs.getString(1);
-                    String resultAuthToken = rs.getString(2);
-                    return new AuthData(resultAuthToken, resultUsername);
-                }
-            }
+        try {
+            return queryAuth(selectAuth, authToken);
         }
         catch (SQLException ex) {
             throw new DataAccessException(ex.getMessage());
@@ -78,6 +72,32 @@ public class SQLAuthDAO implements AuthDAO{
         }
         catch (SQLException ex) {
             throw new DataAccessException(ex.getMessage());
+        }
+    }
+
+    public AuthData checkAuth(String username) throws DataAccessException {
+        String selectAuth = "SELECT username, authtoken FROM auths WHERE username=?";
+        try {
+            return queryAuth(selectAuth, username);
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(ex.getMessage());
+        }
+    }
+
+    private AuthData queryAuth(String query, String value) throws SQLException, DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var selectStatement = conn.prepareStatement(query)) {
+                selectStatement.setString(1, value);
+                try (var rs = selectStatement.executeQuery()) {
+                    if (!rs.next()) {
+                        return null;
+                    }
+                    String resultUsername = rs.getString(1);
+                    String resultAuthToken = rs.getString(2);
+                    return new AuthData(resultAuthToken, resultUsername);
+                }
+            }
         }
     }
 }

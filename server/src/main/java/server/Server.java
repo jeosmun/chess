@@ -122,7 +122,7 @@ public class Server {
         return new Gson().toJson(registerResult);
     }
 
-    private Object login(Request req, Response res) {
+    private Object login(Request req, Response res) throws DataAccessException {
         res.type("application/json");
         var body = getBody(req, Map.class);
 

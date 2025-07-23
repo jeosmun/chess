@@ -3,6 +3,7 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import service.requests.LoginRequest;
 import service.requests.LogoutRequest;
 import service.requests.RegisterRequest;
@@ -20,14 +21,14 @@ public class UserService {
 
     public RegisterResult register(RegisterRequest registerRequest) throws DataAccessException, RequestConflictException {
         AuthData authData = authDAO.createAuth(registerRequest.username());
-        userDAO.createUser(registerRequest.username(), registerRequest.password(), registerRequest.email());
+        userDAO.createUser(registerRequest.username(), hashPassword(registerRequest.password()), registerRequest.email());
         return new RegisterResult(authData.username(), authData.authToken());
     }
 
-    public LoginResult login(LoginRequest loginRequest) {
+    public LoginResult login(LoginRequest loginRequest) throws DataAccessException {
         try {
             UserData userData = userDAO.getUser(loginRequest.username());
-            if (userData == null || !Objects.equals(userData.password(), loginRequest.password())) {
+            if (userData == null || !BCrypt.checkpw(loginRequest.password(), userData.password())) {
                 throw new AuthException("Error: unauthorized");
             }
             else {
@@ -36,9 +37,8 @@ public class UserService {
             }
         }
         catch (DataAccessException ex) {
-
+            throw new DataAccessException(ex.getMessage());
         }
-        return null;
     }
 
     public void logout(LogoutRequest logoutRequest) throws DataAccessException {
@@ -65,5 +65,9 @@ public class UserService {
 
     public AuthData getAuth(String authToken) throws DataAccessException {
         return authDAO.getAuth(authToken);
+    }
+
+    String hashPassword(String clearTextPassword) {
+        return BCrypt.hashpw(clearTextPassword, BCrypt.gensalt());
     }
 }

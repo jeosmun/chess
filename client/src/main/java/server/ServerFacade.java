@@ -2,11 +2,11 @@ package server;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
-import service.requests.*;
-import service.results.CreateGameResult;
-import service.results.ListGamesResult;
-import service.results.LoginResult;
-import service.results.RegisterResult;
+import requests.*;
+import results.CreateGameResult;
+import results.ListGamesResult;
+import results.LoginResult;
+import results.RegisterResult;
 
 import java.io.IOException;
 import java.io.InputStream;

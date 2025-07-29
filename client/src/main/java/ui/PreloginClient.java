@@ -2,10 +2,10 @@ package ui;
 
 import exception.ResponseException;
 import server.ServerFacade;
-import service.requests.LoginRequest;
-import service.requests.RegisterRequest;
-import service.results.LoginResult;
-import service.results.RegisterResult;
+import requests.LoginRequest;
+import requests.RegisterRequest;
+import results.LoginResult;
+import results.RegisterResult;
 import static ui.State.*;
 
 import java.util.Arrays;

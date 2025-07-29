@@ -3,10 +3,10 @@ package ui;
 import exception.ResponseException;
 import model.GameData;
 import server.ServerFacade;
-import service.requests.CreateGameRequest;
-import service.requests.JoinGameRequest;
-import service.results.CreateGameResult;
-import service.results.ListGamesResult;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import results.CreateGameResult;
+import results.ListGamesResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;

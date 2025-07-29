@@ -3,10 +3,13 @@ package client;
 import exception.ResponseException;
 import model.GameData;
 import org.junit.jupiter.api.*;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import requests.LoginRequest;
+import requests.RegisterRequest;
 import server.Server;
 import server.ServerFacade;
-import service.requests.*;
-import service.results.ListGamesResult;
+import results.ListGamesResult;
 
 
 public class ServerFacadeTests {
@@ -28,7 +31,8 @@ public class ServerFacadeTests {
     }
 
     @AfterAll
-    static void stopServer() {
+    static void stopServer() throws ResponseException {
+        facade.clear();
         server.stop();
     }
 

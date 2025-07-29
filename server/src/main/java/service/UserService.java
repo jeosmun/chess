@@ -4,13 +4,11 @@ import dataaccess.*;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-import service.requests.LoginRequest;
-import service.requests.LogoutRequest;
-import service.requests.RegisterRequest;
-import service.results.LoginResult;
-import service.results.RegisterResult;
-
-import java.util.Objects;
+import requests.LoginRequest;
+import requests.LogoutRequest;
+import requests.RegisterRequest;
+import results.LoginResult;
+import results.RegisterResult;
 
 public class UserService {
     private final UserDAO userDAO = new SQLUserDAO();

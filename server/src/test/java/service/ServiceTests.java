@@ -1,18 +1,15 @@
 package service;
 
 import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryUserDAO;
 import dataaccess.RequestConflictException;
-import model.AuthData;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
-import service.requests.*;
-import service.results.CreateGameResult;
-import service.results.ListGamesResult;
-import service.results.LoginResult;
-import service.results.RegisterResult;
+import requests.*;
+import results.CreateGameResult;
+import results.ListGamesResult;
+import results.LoginResult;
+import results.RegisterResult;
 
 import java.util.ArrayList;
 

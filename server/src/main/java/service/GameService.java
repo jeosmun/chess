@@ -1,13 +1,12 @@
 package service;
 
-import chess.ChessGame;
 import dataaccess.*;
 import model.GameData;
-import service.requests.CreateGameRequest;
-import service.requests.JoinGameRequest;
-import service.requests.ListGamesRequest;
-import service.results.CreateGameResult;
-import service.results.ListGamesResult;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import requests.ListGamesRequest;
+import results.CreateGameResult;
+import results.ListGamesResult;
 
 import java.util.ArrayList;
 import java.util.Objects;

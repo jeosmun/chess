@@ -3,12 +3,12 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.RequestConflictException;
+import requests.*;
 import service.*;
-import service.requests.*;
-import service.results.CreateGameResult;
-import service.results.ListGamesResult;
-import service.results.LoginResult;
-import service.results.RegisterResult;
+import results.CreateGameResult;
+import results.ListGamesResult;
+import results.LoginResult;
+import results.RegisterResult;
 import spark.*;
 
 import java.util.Map;

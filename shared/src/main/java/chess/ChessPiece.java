@@ -97,7 +97,7 @@ public class ChessPiece {
     public String toString() {
         var pieceString = new StringBuilder();
         pieceString.append(pieceColor);
-        pieceString.append(", ");
+        pieceString.append(" ");
         pieceString.append(type);
         return pieceString.toString();
     }

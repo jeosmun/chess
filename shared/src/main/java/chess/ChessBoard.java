@@ -106,6 +106,10 @@ public class ChessBoard {
         }
     }
 
+    public ChessPiece[][] getSquares() {
+        return squares;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

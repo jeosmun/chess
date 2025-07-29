@@ -18,25 +18,12 @@ import static ui.State.*;
 public class PostloginClient {
     private final ServerFacade server;
     private final Repl repl;
-    private ArrayList<GameData> gameDataList;
-    private String username;
+    private final ArrayList<GameData> gameDataList;
 
     public PostloginClient(ServerFacade server, Repl repl) {
         this.server = server;
         this.repl = repl;
-        try {
-            this.gameDataList = new ArrayList<>();
-            ListGamesResult res = server.list();
-            if (res.games().isEmpty()) {
-                this.gameDataList = new ArrayList<>();
-            }
-            else {
-                this.gameDataList.addAll(res.games());
-            }
-        }
-        catch (ResponseException ex) {
-            this.gameDataList = new ArrayList<>();
-        }
+        this.gameDataList = new ArrayList<>();
     }
 
     public String eval(String input) {
@@ -49,12 +36,29 @@ public class PostloginClient {
                 case "list" -> list();
                 case "create" -> create(params);
                 case "join" -> join(params);
+                case "watch" -> watch(params);
                 default -> help();
             };
         }
         catch (Exception ex) {
             return ex.getMessage();
         }
+    }
+
+    public String watch(String... params) throws ResponseException {
+        if (params.length >= 1) {
+            try {
+                int gameID = Integer.parseInt(params[0]);
+                // More about implementing this next week
+                DisplayBoard.printBoard(gameDataList.get(gameID - 1).game().getBoard());
+                repl.setState(INGAME);
+                return "Now observing\n";
+            }
+            catch (NumberFormatException ex) {
+                throw new ResponseException(400, "Expected: <GAMEID>");
+            }
+        }
+        throw new ResponseException(400, "Expected: <GAMEID>");
     }
 
     public String join(String... params) throws ResponseException {
@@ -68,7 +72,9 @@ public class PostloginClient {
                 }
                 server.join(new JoinGameRequest(color, gameDataList.get(gameID - 1).gameID(), server.getUsername()));
                 repl.setState(INGAME);
-                return "Successfully joined game";
+                // More about implementing gameplay next week
+                DisplayBoard.printBoard(gameDataList.get(gameID -1 ).game().getBoard());
+                return "Successfully joined game\n";
             }
             catch (NumberFormatException ex) {
                 throw new ResponseException(400, "Expected: <GAMEID> <WHITE | BLACK>");

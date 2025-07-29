@@ -47,6 +47,8 @@ public class PreloginClient {
                 throw new ResponseException(500, "Error: failed to obtain authentication");
             }
             repl.setState(SIGNEDIN);
+            // Need to call this in order to initialize the list of games in the postloginClient
+            repl.postloginClient.list();
             return String.format("%s has been logged in", res.username());
         }
         throw new ResponseException(400, "Expected: <USERNAME> <PASSWORD>");
@@ -62,6 +64,8 @@ public class PreloginClient {
                 throw new ResponseException(500, "Error: failed to obtain authentication");
             }
             repl.setState(SIGNEDIN);
+            // Need to call this in order to initialize the list of games in the postloginClient
+            repl.postloginClient.list();
             return String.format("Congratulations! %s has been registered.", res.username());
         }
         throw new ResponseException(400, "Expected: <USERNAME> <PASSWORD> <EMAIL>");

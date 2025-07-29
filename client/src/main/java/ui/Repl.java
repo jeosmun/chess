@@ -14,6 +14,7 @@ public class Repl {
     private final GameClient gameClient;
     private final ServerFacade server;
     private State state;
+    private boolean showHelp = true;
 
     public Repl(String serverUrl) {
         this.server = new ServerFacade(serverUrl);
@@ -26,11 +27,14 @@ public class Repl {
     public void run() {
         printItalics("Welcome to the Chess Server!");
         System.out.print("\n");
-        printHelp();
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("quit")) {
+            if (showHelp) {
+                printHelp();
+                showHelp = false;
+            }
             printPrompt();
             String line = scanner.nextLine();
 
@@ -62,7 +66,7 @@ public class Repl {
         String helpText = "";
         switch (state) {
             case SIGNEDOUT -> helpText = preloginClient.help();
-//            case SIGNEDIN -> postloginClient.help();
+            case SIGNEDIN -> helpText = postloginClient.help();
 //            case INGAME -> gameClient.help();
         }
         System.out.println(helpText);
@@ -72,11 +76,13 @@ public class Repl {
         String result = "";
         switch (state) {
             case SIGNEDOUT -> result = preloginClient.eval(input);
+            case SIGNEDIN -> result = postloginClient.eval(input);
         }
         return result;
     }
 
     public void setState(State state) {
         this.state = state;
+        this.showHelp = true;
     }
 }

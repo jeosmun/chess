@@ -105,7 +105,7 @@ public class Server {
         var body = getBody(req, Map.class);
 
         if (body.get("username") == null || body.get("password") == null || body.get("email") == null) {
-            throw new RequestException("Error: bad request");
+            throw new RequestException("bad request");
         }
 
         var username = (String) body.get("username");
@@ -127,7 +127,7 @@ public class Server {
         var body = getBody(req, Map.class);
 
         if (body.get("username") == null || body.get("password") == null) {
-            throw new RequestException("Error: Bad Request");
+            throw new RequestException("bad request");
         }
 
         var username = (String) body.get("username");
@@ -175,7 +175,7 @@ public class Server {
         var body = getBody(req, Map.class);
 
         if (body.get("gameName") == null) {
-            throw new RequestException("Error: bad request");
+            throw new RequestException("bad request");
         }
 
         var gameName = (String) body.get("gameName");
@@ -193,7 +193,7 @@ public class Server {
         var body = getBody(req, Map.class);
 
         if (body.get("playerColor") == null || body.get("gameID") == null) {
-            throw new RequestException("Error: bad request");
+            throw new RequestException("bad request");
         }
 
         JoinGameRequest joinGameRequest = new JoinGameRequest((String) body.get("playerColor"),
@@ -210,7 +210,7 @@ public class Server {
     private void authenticate(String authToken) throws DataAccessException {
         System.out.println("In authenticate");
         if (userService.getAuth(authToken) == null) {
-            throw new AuthException("Error: unauthorized");
+            throw new AuthException("unauthorized");
         }
     }
 

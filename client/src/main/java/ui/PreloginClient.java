@@ -46,7 +46,7 @@ public class PreloginClient {
             if (res.authToken() == null || res.username() == null) {
                 throw new ResponseException(500, "Error: failed to obtain authentication");
             }
-//            repl.setState(SIGNEDIN);
+            repl.setState(SIGNEDIN);
             return String.format("%s has been logged in", res.username());
         }
         throw new ResponseException(400, "Expected: <USERNAME> <PASSWORD>");
@@ -61,7 +61,7 @@ public class PreloginClient {
             if (res.authToken() == null || res.username() == null) {
                 throw new ResponseException(500, "Error: failed to obtain authentication");
             }
-//            repl.setState(SIGNEDIN);
+            repl.setState(SIGNEDIN);
             return String.format("Congratulations! %s has been registered.", res.username());
         }
         throw new ResponseException(400, "Expected: <USERNAME> <PASSWORD> <EMAIL>");

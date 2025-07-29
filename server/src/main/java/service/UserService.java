@@ -46,7 +46,7 @@ public class UserService {
 
         AuthData authData = authDAO.getAuth(logoutRequest.authToken());
         if (authData == null) {
-            throw new AuthException("Error: Unauthorized");
+            throw new AuthException("unauthorized");
         }
         System.out.println(authData.authToken());
         authDAO.deleteAuth(authData);

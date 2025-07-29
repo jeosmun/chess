@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import service.requests.LoginRequest;
+import service.requests.LogoutRequest;
 import service.requests.RegisterRequest;
 import service.results.LoginResult;
 import service.results.RegisterResult;
@@ -36,6 +37,14 @@ public class ServerFacade {
         // Possibility for trouble here if no authToken is returned.
         this.authToken = res.authToken();
         return res;
+    }
+
+    public void logout() throws ResponseException {
+        var path = "/session";
+        LogoutRequest request = new LogoutRequest(authToken);
+        this.makeRequest("DELETE", path, request, null);
+        // May be able to set authToken to null even if it fails?
+        this.authToken = null;
     }
 
     private <T> T makeRequest(String method, String path, Object request,

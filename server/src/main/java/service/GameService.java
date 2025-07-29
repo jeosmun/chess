@@ -26,7 +26,7 @@ public class GameService {
 
     public CreateGameResult createGame(CreateGameRequest createGameRequest) throws DataAccessException {
         if (createGameRequest.gameName() == null) {
-            throw new RequestException("Error: bad request");
+            throw new RequestException("bad request");
         }
         GameData gameData = gameDAO.createGame(createGameRequest.gameName());
         return new CreateGameResult(gameData.gameID());
@@ -35,14 +35,14 @@ public class GameService {
     public void joinGame(JoinGameRequest joinGameRequest) throws DataAccessException {
         GameData oldGame = gameDAO.getGame((int) Math.round(joinGameRequest.gameID()));
         if (oldGame == null) {
-            throw new RequestException("Error: bad request");
+            throw new RequestException("bad request");
         }
         if (!Objects.equals(joinGameRequest.playerColor(), "WHITE") && !Objects.equals(joinGameRequest.playerColor(), "BLACK")) {
-            throw new RequestException("Error: bad request");
+            throw new RequestException("bad request");
         }
         if (Objects.equals(joinGameRequest.playerColor(), "WHITE")) {
             if (oldGame.whiteUsername() != null) {
-                throw new RequestConflictException("Error: already taken");
+                throw new RequestConflictException("already taken");
             }
             GameData newGame = new GameData(oldGame.gameID(), joinGameRequest.username(), oldGame.blackUsername(),
                     oldGame.gameName(), oldGame.game());
@@ -50,7 +50,7 @@ public class GameService {
         }
         if (Objects.equals(joinGameRequest.playerColor(), "BLACK")) {
             if (oldGame.blackUsername() != null) {
-                throw new RequestConflictException("Error: already taken");
+                throw new RequestConflictException("already taken");
             }
             GameData newGame = new GameData(oldGame.gameID(), oldGame.whiteUsername(), joinGameRequest.username(),
                     oldGame.gameName(), oldGame.game());

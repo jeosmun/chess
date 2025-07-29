@@ -9,9 +9,9 @@ import static ui.EscapeSequences.*;
 import static ui.State.*;
 
 public class Repl {
-    private final PreloginClient preloginClient;
-    private final PostloginClient postloginClient;
-    private final GameClient gameClient;
+    public final PreloginClient preloginClient;
+    public final PostloginClient postloginClient;
+    public final GameClient gameClient;
     private final ServerFacade server;
     private State state;
     private boolean showHelp = true;
@@ -30,7 +30,7 @@ public class Repl {
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
-        while (!result.equals("quit")) {
+        while (!(result.equals("quit") && this.state == SIGNEDOUT)) {
             if (showHelp) {
                 printHelp();
                 showHelp = false;
@@ -67,7 +67,7 @@ public class Repl {
         switch (state) {
             case SIGNEDOUT -> helpText = preloginClient.help();
             case SIGNEDIN -> helpText = postloginClient.help();
-//            case INGAME -> gameClient.help();
+            case INGAME -> helpText = gameClient.help();
         }
         System.out.println(helpText);
     }
@@ -77,6 +77,7 @@ public class Repl {
         switch (state) {
             case SIGNEDOUT -> result = preloginClient.eval(input);
             case SIGNEDIN -> result = postloginClient.eval(input);
+            case INGAME -> result = gameClient.eval(input);
         }
         return result;
     }

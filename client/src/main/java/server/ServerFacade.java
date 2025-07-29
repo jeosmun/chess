@@ -2,7 +2,9 @@ package server;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import service.requests.LoginRequest;
 import service.requests.RegisterRequest;
+import service.results.LoginResult;
 import service.results.RegisterResult;
 
 import java.io.IOException;
@@ -23,6 +25,14 @@ public class ServerFacade {
     public RegisterResult register(RegisterRequest request) throws ResponseException {
         var path = "/user";
         RegisterResult res = this.makeRequest("POST", path, request, RegisterResult.class);
+        // Possibility for trouble here if no authToken is returned.
+        this.authToken = res.authToken();
+        return res;
+    }
+
+    public LoginResult login(LoginRequest request) throws ResponseException {
+        var path = "/session";
+        LoginResult res = this.makeRequest("POST", path, request, LoginResult.class);
         // Possibility for trouble here if no authToken is returned.
         this.authToken = res.authToken();
         return res;

@@ -2,7 +2,9 @@ package ui;
 
 import exception.ResponseException;
 import server.ServerFacade;
+import service.requests.LoginRequest;
 import service.requests.RegisterRequest;
+import service.results.LoginResult;
 import service.results.RegisterResult;
 import static ui.State.*;
 
@@ -27,12 +29,27 @@ public class PreloginClient {
             return switch (cmd) {
                 case "quit" -> "quit";
                 case "register" -> register(params);
+                case "login" -> login(params);
                 default -> help();
             };
         }
         catch (Exception ex) {
             return ex.getMessage();
         }
+    }
+
+    public String login(String... params) throws ResponseException {
+        if (params.length >= 2) {
+            String username = params[0];
+            String password = params[1];
+            LoginResult res = server.login(new LoginRequest(username, password));
+            if (res.authToken() == null || res.username() == null) {
+                throw new ResponseException(500, "Error: failed to obtain authentication");
+            }
+//            repl.setState(SIGNEDIN);
+            return String.format("%s has been logged in", res.username());
+        }
+        throw new ResponseException(400, "Expected: <USERNAME> <PASSWORD>");
     }
 
     public String register(String... params) throws ResponseException {

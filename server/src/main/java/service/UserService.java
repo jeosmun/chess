@@ -29,7 +29,7 @@ public class UserService {
         try {
             UserData userData = userDAO.getUser(loginRequest.username());
             if (userData == null || !BCrypt.checkpw(loginRequest.password(), userData.password())) {
-                throw new AuthException("Error: unauthorized");
+                throw new AuthException("unauthorized");
             }
             else {
                 AuthData authData = authDAO.createAuth(loginRequest.username());

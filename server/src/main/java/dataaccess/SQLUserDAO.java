@@ -30,7 +30,7 @@ public class SQLUserDAO implements UserDAO{
     public void createUser(String username, String password, String email) throws DataAccessException {
         var user = getUser(username);
         if (user != null) {
-            throw new RequestConflictException("Error: already taken");
+            throw new RequestConflictException("username already taken");
         }
         String insertUser = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         try (var conn = DatabaseManager.getConnection()) {

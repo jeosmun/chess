@@ -17,9 +17,9 @@ public class Repl {
 
     public Repl(String serverUrl) {
         this.server = new ServerFacade(serverUrl);
-        preloginClient = new PreloginClient(server);
-        postloginClient = new PostloginClient(server);
-        gameClient = new GameClient(server);
+        preloginClient = new PreloginClient(server, this);
+        postloginClient = new PostloginClient(server, this);
+        gameClient = new GameClient(server, this);
         state = SIGNEDOUT;
     }
 
@@ -36,7 +36,11 @@ public class Repl {
 
             try {
                 result = eval(line);
-                System.out.println(SET_TEXT_COLOR_BLUE + result);
+                if (result.equals("quit")) {
+                    printItalics("Thank you for using this Chess server!");
+                    break;
+                }
+                System.out.println(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);
             }
             catch (Throwable e) {
                 var msg = e.toString();
@@ -70,5 +74,9 @@ public class Repl {
             case SIGNEDOUT -> result = preloginClient.eval(input);
         }
         return result;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

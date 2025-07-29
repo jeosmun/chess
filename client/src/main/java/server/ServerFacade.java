@@ -2,6 +2,8 @@ package server;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import service.requests.RegisterRequest;
+import service.results.RegisterResult;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,8 +16,17 @@ import java.net.URL;
 public class ServerFacade {
 
     private final String serverUrl;
+    private String authToken = null;
 
     public ServerFacade(String url) {serverUrl = url;}
+
+    public RegisterResult register(RegisterRequest request) throws ResponseException {
+        var path = "/user";
+        RegisterResult res = this.makeRequest("POST", path, request, RegisterResult.class);
+        // Possibility for trouble here if no authToken is returned.
+        this.authToken = res.authToken();
+        return res;
+    }
 
     private <T> T makeRequest(String method, String path, Object request,
                             Class<T> responseClass) throws ResponseException {
@@ -24,6 +35,10 @@ public class ServerFacade {
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
+
+            if (authToken != null) {
+                http.setRequestProperty("authorization", authToken);
+            }
 
             writeBody(request, http);
             http.connect();
@@ -61,17 +76,17 @@ public class ServerFacade {
         return response;
     }
 
-    private boolean isSuccessful(int status) {return status / 200 == 2;}
+    private boolean isSuccessful(int status) {return status >= 200 && status < 300;}
 
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, ResponseException {
         var status = http.getResponseCode();
         if (!isSuccessful(status)) {
             try (InputStream resErr = http.getErrorStream()) {
                 if (resErr != null) {
-                    throw ResponseException.fromJson(resErr);
+                    throw ResponseException.fromJson(status, resErr);
                 }
             }
+            throw new ResponseException(status, "other failure: " + status);
         }
-        throw new ResponseException(status, "other failure: " + status);
     }
 }

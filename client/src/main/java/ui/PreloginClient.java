@@ -1,6 +1,10 @@
 package ui;
 
+import exception.ResponseException;
 import server.ServerFacade;
+import service.requests.RegisterRequest;
+import service.results.RegisterResult;
+import static ui.State.*;
 
 import java.util.Arrays;
 
@@ -8,9 +12,11 @@ import static ui.EscapeSequences.*;
 
 public class PreloginClient {
     private final ServerFacade server;
+    private final Repl repl;
 
-    public PreloginClient(ServerFacade server) {
+    public PreloginClient(ServerFacade server, Repl repl) {
         this.server = server;
+        this.repl = repl;
     }
 
     public String eval(String input) {
@@ -20,12 +26,28 @@ public class PreloginClient {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "quit" -> "quit";
+                case "register" -> register(params);
                 default -> help();
             };
         }
         catch (Exception ex) {
             return ex.getMessage();
         }
+    }
+
+    public String register(String... params) throws ResponseException {
+        if (params.length >= 3) {
+            String username = params[0];
+            String password = params[1];
+            String email = params[2];
+            RegisterResult res = server.register(new RegisterRequest(username, password, email));
+            if (res.authToken() == null || res.username() == null) {
+                throw new ResponseException(500, "Error: failed to obtain authentication");
+            }
+//            repl.setState(SIGNEDIN);
+            return String.format("Congratulations! %s has been registered.", res.username());
+        }
+        throw new ResponseException(400, "Expected: <USERNAME> <PASSWORD> <EMAIL>");
     }
 
     public String help() {

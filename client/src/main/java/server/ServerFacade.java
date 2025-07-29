@@ -2,10 +2,8 @@ package server;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
-import service.requests.ListGamesRequest;
-import service.requests.LoginRequest;
-import service.requests.LogoutRequest;
-import service.requests.RegisterRequest;
+import service.requests.*;
+import service.results.CreateGameResult;
 import service.results.ListGamesResult;
 import service.results.LoginResult;
 import service.results.RegisterResult;
@@ -22,12 +20,14 @@ public class ServerFacade {
 
     private final String serverUrl;
     private String authToken = null;
+    private String username = null;
 
     public ServerFacade(String url) {serverUrl = url;}
 
     public RegisterResult register(RegisterRequest request) throws ResponseException {
         var path = "/user";
         RegisterResult res = this.makeRequest("POST", path, request, RegisterResult.class);
+        this.username = res.username();
         // Possibility for trouble here if no authToken is returned.
         this.authToken = res.authToken();
         return res;
@@ -36,6 +36,7 @@ public class ServerFacade {
     public LoginResult login(LoginRequest request) throws ResponseException {
         var path = "/session";
         LoginResult res = this.makeRequest("POST", path, request, LoginResult.class);
+        this.username = res.username();
         // Possibility for trouble here if no authToken is returned.
         this.authToken = res.authToken();
         return res;
@@ -45,6 +46,7 @@ public class ServerFacade {
         var path = "/session";
         LogoutRequest request = new LogoutRequest(authToken);
         this.makeRequest("DELETE", path, request, null);
+        this.username = null;
         // May be able to set authToken to null even if it fails?
         this.authToken = null;
     }
@@ -53,6 +55,16 @@ public class ServerFacade {
         var path = "/game";
         ListGamesRequest request = new ListGamesRequest(authToken);
         return this.makeRequest("GET", path, null, ListGamesResult.class);
+    }
+
+    public CreateGameResult create(CreateGameRequest request) throws ResponseException {
+        var path = "/game";
+        return this.makeRequest("POST", path, request, CreateGameResult.class);
+    }
+
+    public void join(JoinGameRequest request) throws ResponseException {
+        var path = "/game";
+        this.makeRequest("PUT", path, request, null);
     }
 
     private <T> T makeRequest(String method, String path, Object request,
@@ -116,4 +128,6 @@ public class ServerFacade {
             throw new ResponseException(status, "other failure: " + status);
         }
     }
+
+    public String getUsername() {return username;}
 }

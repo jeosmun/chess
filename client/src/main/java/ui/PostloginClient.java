@@ -3,6 +3,9 @@ package ui;
 import exception.ResponseException;
 import model.GameData;
 import server.ServerFacade;
+import service.requests.CreateGameRequest;
+import service.requests.JoinGameRequest;
+import service.results.CreateGameResult;
 import service.results.ListGamesResult;
 
 import java.util.ArrayList;
@@ -16,11 +19,24 @@ public class PostloginClient {
     private final ServerFacade server;
     private final Repl repl;
     private ArrayList<GameData> gameDataList;
+    private String username;
 
     public PostloginClient(ServerFacade server, Repl repl) {
         this.server = server;
         this.repl = repl;
-        this.gameDataList = new ArrayList<>();
+        try {
+            this.gameDataList = new ArrayList<>();
+            ListGamesResult res = server.list();
+            if (res.games().isEmpty()) {
+                this.gameDataList = new ArrayList<>();
+            }
+            else {
+                this.gameDataList.addAll(res.games());
+            }
+        }
+        catch (ResponseException ex) {
+            this.gameDataList = new ArrayList<>();
+        }
     }
 
     public String eval(String input) {
@@ -31,12 +47,43 @@ public class PostloginClient {
             return switch (cmd) {
                 case "logout" -> logout();
                 case "list" -> list();
+                case "create" -> create(params);
+                case "join" -> join(params);
                 default -> help();
             };
         }
         catch (Exception ex) {
             return ex.getMessage();
         }
+    }
+
+    public String join(String... params) throws ResponseException {
+        if (params.length >= 2) {
+            try {
+                int gameID = Integer.parseInt(params[0]);
+                String color = params[1];
+                color = color.toUpperCase();
+                if (!color.equals("WHITE") && !color.equals("BLACK")) {
+                    throw new ResponseException(400, "Expected: <GAMEID> <WHITE | BLACK>");
+                }
+                server.join(new JoinGameRequest(color, gameDataList.get(gameID - 1).gameID(), server.getUsername()));
+                repl.setState(INGAME);
+                return "Successfully joined game";
+            }
+            catch (NumberFormatException ex) {
+                throw new ResponseException(400, "Expected: <GAMEID> <WHITE | BLACK>");
+            }
+        }
+        throw new ResponseException(400, "Expected: <GAMEID> <WHITE | BLACK>");
+    }
+
+    public String create(String... params) throws ResponseException {
+        if (params.length >= 1) {
+            String gameName = params[0];
+            CreateGameResult res = server.create(new CreateGameRequest(gameName));
+            return String.format("%s successfully created", gameName);
+        }
+        throw new ResponseException(400, "Expected: <GAMENAME>");
     }
 
     public String logout() throws ResponseException {
@@ -72,7 +119,7 @@ public class PostloginClient {
             if (black == null) {
                 black = "empty";
             }
-            result.append(String.format("%d.\t Game name: %s\t White: %s\t Black: %s", i, name, white, black));
+            result.append(String.format("%d.\t Game name: %s\t White: %s\t Black: %s", i + 1, name, white, black));
         }
         return result.toString();
     }
@@ -88,7 +135,7 @@ public class PostloginClient {
         stringBuilder.append(RESET_TEXT_COLOR);
         stringBuilder.append(" - to create a new game\n");
         stringBuilder.append(SET_TEXT_COLOR_RED);
-        stringBuilder.append("join <GAMEID> <COLOR>");
+        stringBuilder.append("join <GAMEID> <WHITE | BLACK>");
         stringBuilder.append(RESET_TEXT_COLOR);
         stringBuilder.append(" - to join a game\n");
         stringBuilder.append(SET_TEXT_COLOR_RED);

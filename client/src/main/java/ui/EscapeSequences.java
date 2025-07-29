@@ -62,4 +62,12 @@ public class EscapeSequences {
     public static final String EMPTY = " \u2003 ";
 
     public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
+
+    // My printing functions
+
+    public static void printItalics(String string) {
+        System.out.print(SET_TEXT_ITALIC);
+        System.out.print(string);
+        System.out.print(RESET_TEXT_ITALIC);
+    }
 }

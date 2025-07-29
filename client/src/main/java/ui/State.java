@@ -1,6 +1,6 @@
 package ui;
 
-public enum ChessState {
+public enum State {
     SIGNEDOUT,
     SIGNEDIN,
     INGAME

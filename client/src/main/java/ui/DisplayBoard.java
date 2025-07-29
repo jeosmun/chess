@@ -6,7 +6,6 @@ import chess.ChessPiece;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import static ui.EscapeSequences.*;
@@ -17,23 +16,6 @@ public class DisplayBoard {
     private static final int SQUARE_SIZE_IN_PADDED_CHARS = 3;
 
     // Padded characters
-
-    public static String printBoardString(ChessBoard board) {
-        ChessPiece[][] squares = board.getSquares();
-        StringBuilder result = new StringBuilder();
-        for (ChessPiece[] row : squares) {
-            for (ChessPiece square : row) {
-                if (square != null) {
-                    result.append(square.toString() + ", ");
-                }
-                else {
-                    result.append(" ");
-                }
-            }
-            result.append("\n");
-        }
-        return result.toString();
-    }
 
     public static void printBoard(ChessBoard board) {
         // Do it with white on bottom first
@@ -78,26 +60,6 @@ public class DisplayBoard {
         ChessPiece[][] squares = board.getSquares();
         int[] ascendingRowOrder = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
         printRow(out, i, ascendingRowOrder, squares);
-//        setDarkGrey(out);
-//        out.print(SET_TEXT_COLOR_LIGHT_GREY);
-//        out.print("\u2003" + i + " ");
-//        // If i is even, then we start with a light square
-//        if (i % 2 == 0) {
-//            for (int j : ascendingRowOrder) {
-//                printPiece(out, squares[i - 1][j - 1], j - 1);
-//            }
-//        }
-//        // Otherwise, we start with a dark square
-//        else {
-//            for (int j : ascendingRowOrder) {
-//                printPiece(out, squares[i - 1][j - 1], j);
-//            }
-//        }
-//        setDarkGrey(out);
-//        out.print(SET_TEXT_COLOR_LIGHT_GREY);
-//        out.print("\u2003" + i + " ");
-//        reset(out);
-//        out.print("\n");
     }
 
     private static void printHeaderAscending(PrintStream out) {

@@ -2,9 +2,11 @@ package server;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import service.requests.ListGamesRequest;
 import service.requests.LoginRequest;
 import service.requests.LogoutRequest;
 import service.requests.RegisterRequest;
+import service.results.ListGamesResult;
 import service.results.LoginResult;
 import service.results.RegisterResult;
 
@@ -45,6 +47,12 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, request, null);
         // May be able to set authToken to null even if it fails?
         this.authToken = null;
+    }
+
+    public ListGamesResult list() throws ResponseException {
+        var path = "/game";
+        ListGamesRequest request = new ListGamesRequest(authToken);
+        return this.makeRequest("GET", path, null, ListGamesResult.class);
     }
 
     private <T> T makeRequest(String method, String path, Object request,

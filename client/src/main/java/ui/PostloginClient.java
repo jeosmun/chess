@@ -1,8 +1,11 @@
 package ui;
 
 import exception.ResponseException;
+import model.GameData;
 import server.ServerFacade;
+import service.results.ListGamesResult;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static ui.EscapeSequences.RESET_TEXT_COLOR;
@@ -12,10 +15,12 @@ import static ui.State.*;
 public class PostloginClient {
     private final ServerFacade server;
     private final Repl repl;
+    private ArrayList<GameData> gameDataList;
 
     public PostloginClient(ServerFacade server, Repl repl) {
         this.server = server;
         this.repl = repl;
+        this.gameDataList = new ArrayList<>();
     }
 
     public String eval(String input) {
@@ -40,8 +45,36 @@ public class PostloginClient {
         return "successfully logged out";
     }
 
-    public String list() {
-        return null;
+    public String list() throws ResponseException {
+        ListGamesResult res = server.list();
+        gameDataList.clear();
+        gameDataList.addAll(res.games());
+        if (gameDataList.isEmpty()) {
+            return "There are no current games";
+        }
+        StringBuilder result = new StringBuilder();
+        GameData game = null;
+        boolean first = true;
+        for (int i = 0; i < gameDataList.size(); i++) {
+            if (first) {
+                first = false;
+            }
+            else {
+                result.append("\n");
+            }
+            game = gameDataList.get(i);
+            String name = game.gameName();
+            String white = game.whiteUsername();
+            String black = game.blackUsername();
+            if (white == null) {
+                white = "empty";
+            }
+            if (black == null) {
+                black = "empty";
+            }
+            result.append(String.format("%d.\t Game name: %s\t White: %s\t Black: %s", i, name, white, black));
+        }
+        return result.toString();
     }
 
     public String help() {

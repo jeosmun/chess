@@ -99,8 +99,10 @@ public class DisplayBoard {
     }
 
     private static void setBlack(PrintStream out) {
-        out.print(SET_BG_COLOR_BLACK);
-        out.print(SET_TEXT_COLOR_BLACK);
+//        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_BG_COLOR_DARK_GREEN);
+//        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_TEXT_COLOR_GREEN);
     }
 
     private static void setLightGrey(PrintStream out) {
@@ -136,7 +138,7 @@ public class DisplayBoard {
                     out.print(SET_TEXT_COLOR_WHITE);
                 }
                 else {
-                    out.print(SET_TEXT_COLOR_DARK_GREY);
+                    out.print(SET_TEXT_COLOR_BLACK);
                 }
                 out.print(getPieceChar(piece));
             }
@@ -146,7 +148,7 @@ public class DisplayBoard {
                     out.print(SET_TEXT_COLOR_WHITE);
                 }
                 else {
-                    out.print(SET_TEXT_COLOR_DARK_GREY);
+                    out.print(SET_TEXT_COLOR_BLACK);
                 }
                 out.print(getPieceChar(piece));
             }

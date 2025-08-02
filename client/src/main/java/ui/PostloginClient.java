@@ -46,11 +46,16 @@ public class PostloginClient {
     }
 
     public String watch(String... params) throws ResponseException {
-        if (params.length >= 1) {
+        if (params.length == 1) {
             try {
                 int gameID = Integer.parseInt(params[0]);
                 // More about implementing this next week
-                DisplayBoard.printBoard(gameDataList.get(gameID - 1).game().getBoard());
+                try {
+                    DisplayBoard.printBoard(gameDataList.get(gameID - 1).game().getBoard());
+                }
+                catch (IndexOutOfBoundsException ex) {
+                    throw new ResponseException(400, String.format("%d is not a valid gameID", gameID));
+                }
                 repl.setState(INGAME);
                 return "Now observing\n";
             }
@@ -62,7 +67,7 @@ public class PostloginClient {
     }
 
     public String join(String... params) throws ResponseException {
-        if (params.length >= 2) {
+        if (params.length == 2) {
             try {
                 int gameID = Integer.parseInt(params[0]);
                 String color = params[1];
@@ -70,7 +75,12 @@ public class PostloginClient {
                 if (!color.equals("WHITE") && !color.equals("BLACK")) {
                     throw new ResponseException(400, "Expected: <GAMEID> <WHITE | BLACK>");
                 }
-                server.join(new JoinGameRequest(color, gameDataList.get(gameID - 1).gameID(), server.getUsername()));
+                try {
+                    server.join(new JoinGameRequest(color, gameDataList.get(gameID - 1).gameID(), server.getUsername()));
+                }
+                catch (IndexOutOfBoundsException ex) {
+                    throw new ResponseException(400, String.format("%d is not a valid gameID", gameID));
+                }
                 repl.setState(INGAME);
                 // More about implementing gameplay next week
                 DisplayBoard.printBoard(gameDataList.get(gameID -1 ).game().getBoard());
@@ -84,7 +94,7 @@ public class PostloginClient {
     }
 
     public String create(String... params) throws ResponseException {
-        if (params.length >= 1) {
+        if (params.length == 1) {
             String gameName = params[0];
             CreateGameResult res = server.create(new CreateGameRequest(gameName));
             return String.format("%s successfully created", gameName);

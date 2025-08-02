@@ -39,7 +39,7 @@ public class PreloginClient {
     }
 
     public String login(String... params) throws ResponseException {
-        if (params.length >= 2) {
+        if (params.length == 2) {
             String username = params[0];
             String password = params[1];
             LoginResult res = server.login(new LoginRequest(username, password));
@@ -55,7 +55,7 @@ public class PreloginClient {
     }
 
     public String register(String... params) throws ResponseException {
-        if (params.length >= 3) {
+        if (params.length == 3) {
             String username = params[0];
             String password = params[1];
             String email = params[2];

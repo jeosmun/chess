@@ -19,7 +19,7 @@ public class Repl implements NotificationHandler {
     private boolean showHelp = true;
 
     public Repl(String serverUrl) {
-        this.server = new ServerFacade(serverUrl);
+        this.server = new ServerFacade(serverUrl, this);
         preloginClient = new PreloginClient(server, this);
         postloginClient = new PostloginClient(server, this);
         gameClient = new GameClient(server, this);

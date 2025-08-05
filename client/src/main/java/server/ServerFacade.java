@@ -7,6 +7,8 @@ import results.CreateGameResult;
 import results.ListGamesResult;
 import results.LoginResult;
 import results.RegisterResult;
+import server.websocket.NotificationHandler;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,15 +16,24 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
-public class ServerFacade {
+import javax.websocket.*;
+
+public class ServerFacade extends Endpoint {
 
     private final String serverUrl;
     private String authToken = null;
     private String username = null;
+    // For the websocket connection
+    public Session session;
+    public NotificationHandler notificationHandler;
 
-    public ServerFacade(String url) {serverUrl = url;}
+    public ServerFacade(String url, NotificationHandler notificationHandler) {
+        serverUrl = url;
+        this.notificationHandler = notificationHandler;
+    }
 
     public RegisterResult register(RegisterRequest request) throws ResponseException {
         var path = "/user";
@@ -137,4 +148,36 @@ public class ServerFacade {
     }
 
     public String getUsername() {return username;}
+
+    // Here is my code for the websocket
+
+    public void connectWS() throws ResponseException {
+        try {
+            var url = serverUrl.replace("http", "ws");
+            URI socketURI = new URI(url + "/ws");
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            this.session = container.connectToServer(this, socketURI);
+
+            // set message handler
+            this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+                @Override
+                public void onMessage(String message) {
+                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    notificationHandler.notify(serverMessage);
+                }
+            });
+        }
+        catch (URISyntaxException | IOException | DeploymentException ex) {
+            throw new ResponseException(500, ex.getMessage());
+        }
+    }
+
+    public void send(String message) throws IOException {
+        this.session.getBasicRemote().sendText(message);
+    }
+
+    @Override
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
+        // Endpoint requires this method, but nothing has to be done
+    }
 }

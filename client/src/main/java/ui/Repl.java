@@ -1,6 +1,8 @@
 package ui;
 
 import server.ServerFacade;
+import server.websocket.NotificationHandler;
+import websocket.messages.*;
 
 import java.util.Scanner;
 
@@ -8,7 +10,7 @@ import static ui.EscapeSequences.*;
 
 import static ui.State.*;
 
-public class Repl {
+public class Repl implements NotificationHandler {
     public final PreloginClient preloginClient;
     public final PostloginClient postloginClient;
     public final GameClient gameClient;
@@ -85,5 +87,33 @@ public class Repl {
     public void setState(State state) {
         this.state = state;
         this.showHelp = true;
+    }
+
+    // Implementing a websocket functionality. Turning Repl into a NotificationHandler object
+
+    @Override
+    public void notify(ServerMessage message) {
+        switch (message.getServerMessageType()) {
+            case ERROR -> error((ErrorMessage) message);
+            case LOAD_GAME -> loadGame((LoadGameMessage) message);
+            case NOTIFICATION -> notify((NotificationMessage) message);
+        }
+    }
+
+    public void error(ErrorMessage message) {
+        System.out.print(SET_TEXT_COLOR_RED + message.getMessage() + RESET_TEXT_COLOR);
+        printPrompt();
+    }
+
+    public void loadGame(LoadGameMessage message) {
+        // This function just prints out the board from both points of view.
+        // Need to add functionality for printing out differently for white/black/observers
+        DisplayBoard.printBoard(message.getGameData().game().getBoard());
+        printPrompt();
+    }
+
+    public void notify(NotificationMessage message) {
+        System.out.print(SET_TEXT_COLOR_BLUE + message.getMessage() + RESET_TEXT_COLOR);
+        printPrompt();
     }
 }

@@ -83,6 +83,7 @@ public class PostloginClient {
                 }
                 repl.setState(INGAME);
                 // More about implementing gameplay next week
+                // Connect through a websocket interaction
                 DisplayBoard.printBoard(gameDataList.get(gameID -1 ).game().getBoard());
                 return "Successfully joined game\n";
             }

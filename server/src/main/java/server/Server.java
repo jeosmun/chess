@@ -17,6 +17,10 @@ public class Server {
     private UserService userService;
     private GameService gameService;
     private ClearService clearService;
+    // needs something to store information about the websocket connections that are open, some sort of connection
+    // manager map. Four methods: CONNECT, MAKEMOVE, LEAVE, RESIGN
+    // Sends three kinds of messages to different clients. LOAD_GAME (current game), NOTIFICATION (text message),
+    // ERROR (error text message)
 
     public Server() {
         try {

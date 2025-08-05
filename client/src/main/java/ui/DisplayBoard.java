@@ -11,11 +11,6 @@ import java.util.Objects;
 import static ui.EscapeSequences.*;
 
 public class DisplayBoard {
-    // Board dimensions
-    private static final int BOARD_SIZE_IN_SQUARES = 8;
-    private static final int SQUARE_SIZE_IN_PADDED_CHARS = 3;
-
-    // Padded characters
 
     public static void printBoard(ChessBoard board) {
         // Do it with white on bottom first

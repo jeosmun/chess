@@ -16,10 +16,13 @@ public class UserGameCommand {
 
     private final Integer gameID;
 
-    public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
+    private final String username;
+
+    public UserGameCommand(CommandType commandType, String username, String authToken, Integer gameID) {
         this.commandType = commandType;
         this.authToken = authToken;
         this.gameID = gameID;
+        this.username = username;
     }
 
     public enum CommandType {
@@ -27,6 +30,12 @@ public class UserGameCommand {
         MAKE_MOVE,
         LEAVE,
         RESIGN
+    }
+
+    public enum UserType {
+        WHITE_PLAYER,
+        BLACK_PLAYER,
+        OBSERVER
     }
 
     public CommandType getCommandType() {
@@ -40,6 +49,8 @@ public class UserGameCommand {
     public Integer getGameID() {
         return gameID;
     }
+
+    public String getUsername() {return username;}
 
     @Override
     public boolean equals(Object o) {

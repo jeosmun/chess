@@ -5,30 +5,41 @@ import org.eclipse.jetty.websocket.api.Session;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameConnection {
-    public ConcurrentHashMap<String, Connection> observers;
-    public Connection whitePlayer;
-    public Connection blackPlayer;
-    public int gameID;
+    private final ConcurrentHashMap<String, Connection> observers = new ConcurrentHashMap<>();
+    private Connection whitePlayer;
+    private Connection blackPlayer;
+    private int gameID;
 
     public GameConnection(int gameID) {
         this.gameID = gameID;
     }
 
-    public void addObserver(String username, Session session) {
-        var connection = new Connection(username, session);
-        observers.put(username, connection);
+    public void addObserver(Connection connection) {
+        observers.put(connection.getAuthToken(), connection);
     }
 
-    public void removeObserver(String username) {
-        observers.remove(username);
+    public void removeObserver(String authToken) {
+        observers.remove(authToken);
     }
 
-    public void setWhitePlayer(String username, Session session) {
-        this.whitePlayer = new Connection(username, session);
+    public ConcurrentHashMap<String, Connection> getObservers() {
+        return observers;
     }
 
-    public void setBlackPlayer(String username, Session session) {
-        this.blackPlayer = new Connection(username, session);
+    public void setWhitePlayer(Connection connection) {
+        this.whitePlayer = connection;
+    }
+
+    public void setBlackPlayer(Connection connection) {
+        this.blackPlayer = connection;
+    }
+
+    public Connection getWhiteConnection() {
+        return whitePlayer;
+    }
+
+    public Connection getBlackConnection() {
+        return blackPlayer;
     }
 
     public void removeWhitePlayer() {

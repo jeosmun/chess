@@ -6,16 +6,24 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Connection {
-    public String username;
-    public Session session;
+    private final String authToken;
+    private final Session session;
 
-    public Connection(String username, Session session) {
-        this.username = username;
+    public Connection(String authToken, Session session) {
+        this.authToken = authToken;
         this.session = session;
     }
 
     public void send(String message) throws IOException {
         session.getRemote().sendString(message);
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public Session getSession() {
+        return session;
     }
 
     @Override
@@ -24,11 +32,11 @@ public class Connection {
             return false;
         }
         Connection that = (Connection) o;
-        return Objects.equals(username, that.username) && Objects.equals(session, that.session);
+        return Objects.equals(authToken, that.authToken) && Objects.equals(session, that.session);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, session);
+        return Objects.hash(authToken, session);
     }
 }

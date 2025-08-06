@@ -15,6 +15,7 @@ public class ChessGame {
     private TeamColor teamTurn;
     private ChessPosition whiteKingPosition;
     private ChessPosition blackKingPosition;
+    private boolean gameIsOver;
 
     public ChessGame() {
         board = new ChessBoard();
@@ -22,6 +23,7 @@ public class ChessGame {
         teamTurn = TeamColor.WHITE;
         whiteKingPosition = new ChessPosition(1, 5);
         blackKingPosition = new ChessPosition(8, 5);
+        gameIsOver = false;
     }
 
     /**
@@ -247,6 +249,14 @@ public class ChessGame {
                 blackKingPosition.update(endPosition);
             }
         }
+    }
+
+    public void setGameOver() {
+        this.gameIsOver = true;
+    }
+
+    public boolean isGameOver() {
+        return gameIsOver;
     }
 
     @Override

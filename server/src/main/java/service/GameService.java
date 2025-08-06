@@ -61,6 +61,10 @@ public class GameService {
         return gameDAO.getGame(gameID);
     }
 
+    public void updateGameData(GameData gameData) throws DataAccessException {
+        gameDAO.updateGame(gameData);
+    }
+
     public void clear() throws DataAccessException {
         gameDAO.clear();
     }

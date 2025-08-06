@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.RequestConflictException;
 import requests.*;
+import server.websocket.WebSocketHandler;
 import service.*;
 import results.CreateGameResult;
 import results.ListGamesResult;
@@ -17,8 +18,10 @@ public class Server {
     private UserService userService;
     private GameService gameService;
     private ClearService clearService;
+    private WebSocketHandler webSocketHandler;
     // needs something to store information about the websocket connections that are open, some sort of connection
-    // manager map. Four methods: CONNECT, MAKEMOVE, LEAVE, RESIGN
+    // manager map.
+    // Four methods: CONNECT, MAKEMOVE, LEAVE, RESIGN
     // Sends three kinds of messages to different clients. LOAD_GAME (current game), NOTIFICATION (text message),
     // ERROR (error text message)
 
@@ -27,6 +30,7 @@ public class Server {
             userService = new UserService();
             gameService = new GameService();
             clearService = new ClearService(userService, gameService);
+            webSocketHandler = new WebSocketHandler(gameService);
         }
         catch (DataAccessException ex) {
             System.out.println("Error: Unable to access chess database");

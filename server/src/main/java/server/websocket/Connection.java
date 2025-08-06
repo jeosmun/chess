@@ -26,6 +26,12 @@ public class Connection {
         return session;
     }
 
+    public void closeSession() {
+        if (session.isOpen()) {
+            session.close();
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

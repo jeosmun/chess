@@ -19,6 +19,8 @@ public class GameConnection {
     }
 
     public void removeObserver(String authToken) {
+        Connection c = observers.get(authToken);
+        c.closeSession();
         observers.remove(authToken);
     }
 
@@ -43,10 +45,12 @@ public class GameConnection {
     }
 
     public void removeWhitePlayer() {
+        whitePlayer.closeSession();
         this.whitePlayer = null;
     }
 
     public void removeBlackPlayer() {
+        blackPlayer.closeSession();
         this.blackPlayer = null;
     }
 }

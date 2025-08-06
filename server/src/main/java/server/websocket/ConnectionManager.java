@@ -26,6 +26,10 @@ public class ConnectionManager {
         }
     }
 
+    public GameConnection get(int gameID) {
+        return gameConnections.get(gameID);
+    }
+
     public void broadcast(int gameID, String excludeToken, ServerMessage message) throws IOException {
         GameConnection gameConnection = gameConnections.get(gameID);
         Connection whiteConnection = gameConnection.getWhiteConnection();

@@ -84,20 +84,25 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // Check if move is null
         if(move == null) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Error: no move specified");
         }
         // Check if there is a piece at the starting position
         if (board.getPiece(move.getStartPosition()) == null) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Error: no piece found at start position of move");
+        }
+        // Check if is in Stalemate or either team is in Checkmate
+        if (isInStalemate(TeamColor.WHITE) || isInStalemate(TeamColor.BLACK)
+                || isInCheckmate(TeamColor.WHITE) || isInCheckmate(TeamColor.BLACK)) {
+            throw new InvalidMoveException("Error: game is in stalemate or game is in checkmate");
         }
         // Check if piece at start is on the wrong team for whose turn it is
         if (board.getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Error: the piece at start position of move is on wrong team");
         }
         // Check if move is a valid move
         Collection<ChessMove> moves = validMoves(move.getStartPosition());
         if(!moves.contains(move)) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Error: not a valid move");
         }
         // Try to execute the move, catch errors if they appear
         try {
@@ -110,7 +115,7 @@ public class ChessGame {
             }
         }
         catch(Exception ex){
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("An error occurred while executing move");
         }
     }
 

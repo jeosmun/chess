@@ -61,6 +61,7 @@ public class WebSocketHandler {
         Connection connection = new Connection(rootToken, session);
         connectionManager.add(gameID, connection, userType);
         // Send a load game back to the root user
+        System.out.println(new Gson().toJson(new LoadGameMessage(gameService.getGameData(gameID))));
         connection.send(new Gson().toJson(new LoadGameMessage(gameService.getGameData(gameID))));
         // Send a broadcast message to everyone else
         String playerType = null;

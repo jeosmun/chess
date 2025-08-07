@@ -1,4 +1,5 @@
 import chess.*;
+import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 
 public class Main {

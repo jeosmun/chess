@@ -34,18 +34,26 @@ public class ConnectionManager {
         GameConnection gameConnection = gameConnections.get(gameID);
         Connection whiteConnection = gameConnection.getWhiteConnection();
         Connection blackConnection = gameConnection.getBlackConnection();
-        if (whiteConnection.getSession().isOpen()) {
+        if (whiteConnection != null && whiteConnection.getSession().isOpen()) {
             if (!Objects.equals(excludeToken, whiteConnection.getAuthToken())) {
                 whiteConnection.send(message.toString());
             }
         }
-        else {gameConnection.removeWhitePlayer();}
-        if (blackConnection.getSession().isOpen()) {
+        else {
+            if (whiteConnection != null) {
+                gameConnection.removeWhitePlayer();
+            }
+        }
+        if (blackConnection != null && blackConnection.getSession().isOpen()) {
             if (!Objects.equals(excludeToken, blackConnection.getAuthToken())) {
                 blackConnection.send(message.toString());
             }
         }
-        else {gameConnection.removeBlackPlayer();}
+        else {
+            if (blackConnection != null) {
+                gameConnection.removeBlackPlayer();
+            }
+        }
         ArrayList<Connection> removeList = new ArrayList<>();
         for (Connection c : gameConnection.getObservers().values()) {
             if (c.getSession().isOpen()) {

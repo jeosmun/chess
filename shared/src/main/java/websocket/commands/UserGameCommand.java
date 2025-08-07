@@ -12,20 +12,16 @@ public class UserGameCommand {
 
     private final CommandType commandType;
 
-    private final UserType userType;
 
     private final String authToken;
 
     private final Integer gameID;
 
-    private final String username;
 
-    public UserGameCommand(CommandType commandType, UserType userType, String username, String authToken, Integer gameID) {
+    public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
         this.commandType = commandType;
         this.authToken = authToken;
         this.gameID = gameID;
-        this.username = username;
-        this.userType = userType;
     }
 
     public enum CommandType {
@@ -35,17 +31,9 @@ public class UserGameCommand {
         RESIGN
     }
 
-    public enum UserType {
-        WHITE_PLAYER,
-        BLACK_PLAYER,
-        OBSERVER
-    }
-
     public CommandType getCommandType() {
         return commandType;
     }
-
-    public UserType getUserType() {return userType;}
 
     public String getAuthToken() {
         return authToken;
@@ -54,8 +42,6 @@ public class UserGameCommand {
     public Integer getGameID() {
         return gameID;
     }
-
-    public String getUsername() {return username;}
 
     @Override
     public boolean equals(Object o) {

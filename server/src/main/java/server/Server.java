@@ -19,18 +19,13 @@ public class Server {
     private GameService gameService;
     private ClearService clearService;
     private WebSocketHandler webSocketHandler;
-    // needs something to store information about the websocket connections that are open, some sort of connection
-    // manager map.
-    // Four methods: CONNECT, MAKEMOVE, LEAVE, RESIGN
-    // Sends three kinds of messages to different clients. LOAD_GAME (current game), NOTIFICATION (text message),
-    // ERROR (error text message)
 
     public Server() {
         try {
             userService = new UserService();
             gameService = new GameService();
             clearService = new ClearService(userService, gameService);
-            webSocketHandler = new WebSocketHandler(gameService);
+            webSocketHandler = new WebSocketHandler(gameService, userService);
         }
         catch (DataAccessException ex) {
             System.out.println("Error: Unable to access chess database");
@@ -43,6 +38,8 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
+        Spark.webSocket("/ws", webSocketHandler);
+
         Spark.delete("/db", this::clear);
 
         Spark.post("/user", this::register);
@@ -208,6 +205,8 @@ public class Server {
                 (double) body.get("gameID"), userService.getAuth(authToken).username());
 
         gameService.joinGame(joinGameRequest);
+
+
 
         res.status(200);
         res.body("{}");

@@ -46,7 +46,7 @@ public class Repl implements NotificationHandler {
                     printItalics("Thank you for using this Chess server!");
                     break;
                 }
-                System.out.println(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);
+                    System.out.println(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);
             }
             catch (Throwable e) {
                 var msg = e.toString();
@@ -94,21 +94,28 @@ public class Repl implements NotificationHandler {
     @Override
     public void notify(ServerMessage message) {
         switch (message.getServerMessageType()) {
-            case ERROR -> error((ErrorMessage) message);
-            case LOAD_GAME -> loadGame((LoadGameMessage) message);
-            case NOTIFICATION -> notify((NotificationMessage) message);
+            case ERROR -> {
+                error((ErrorMessage) message);
+            }
+            case LOAD_GAME -> {
+                loadGame((LoadGameMessage) message);
+            }
+            case NOTIFICATION -> {
+                notify((NotificationMessage) message);
+            }
         }
     }
 
     public void error(ErrorMessage message) {
-        System.out.print(SET_TEXT_COLOR_RED + message.getMessage() + RESET_TEXT_COLOR);
+        System.out.println(SET_TEXT_COLOR_RED + message.getMessage() + RESET_TEXT_COLOR);
         printPrompt();
     }
 
     public void loadGame(LoadGameMessage message) {
         // This function just prints out the board from both points of view.
         // Need to add functionality for printing out differently for white/black/observers
-        DisplayBoard.printBoard(message.getGameData().game().getBoard());
+        gameClient.setGameData(message.getGameData());
+        System.out.print(gameClient.loadBoard());
         printPrompt();
     }
 

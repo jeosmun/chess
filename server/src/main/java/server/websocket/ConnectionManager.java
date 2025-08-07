@@ -67,8 +67,4 @@ public class ConnectionManager {
             gameConnection.removeObserver(c.getAuthToken());
         }
     }
-
-    public void removeGameConnection(int gameID) {
-        gameConnections.remove(gameID);
-    }
 }

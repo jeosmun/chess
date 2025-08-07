@@ -84,7 +84,7 @@ public class PreloginClient {
         stringBuilder.append(SET_TEXT_COLOR_RED);
         stringBuilder.append("quit");
         stringBuilder.append(RESET_TEXT_COLOR);
-        stringBuilder.append(" - to exit the program\n");
+        stringBuilder.append(" - to quit the program\n");
         stringBuilder.append(SET_TEXT_COLOR_RED);
         stringBuilder.append("help");
         stringBuilder.append(RESET_TEXT_COLOR);

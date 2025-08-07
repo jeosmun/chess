@@ -1,5 +1,7 @@
 package server;
 
+import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import requests.*;
@@ -8,6 +10,10 @@ import results.ListGamesResult;
 import results.LoginResult;
 import results.RegisterResult;
 import server.websocket.NotificationHandler;
+import websocket.commands.*;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -28,6 +34,7 @@ public class ServerFacade extends Endpoint {
     private String username = null;
     // For the websocket connection
     public Session session;
+    public UserGameCommand.UserType userType;
     public NotificationHandler notificationHandler;
 
     public ServerFacade(String url, NotificationHandler notificationHandler) {
@@ -149,9 +156,11 @@ public class ServerFacade extends Endpoint {
 
     public String getUsername() {return username;}
 
+    public String getAuthToken() {return authToken;}
+
     // Here is my code for the websocket
 
-    public void connectWS() throws ResponseException {
+    public void connectWS(String color, int gameID) throws ResponseException {
         try {
             var url = serverUrl.replace("http", "ws");
             URI socketURI = new URI(url + "/ws");
@@ -163,16 +172,50 @@ public class ServerFacade extends Endpoint {
                 @Override
                 public void onMessage(String message) {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                    notificationHandler.notify(serverMessage);
+                    switch (serverMessage.getServerMessageType()) {
+                        case NOTIFICATION -> {
+                            notificationHandler.notify(new Gson().fromJson(message, NotificationMessage.class));
+                        }
+                        case LOAD_GAME -> {
+                            notificationHandler.notify(new Gson().fromJson(message, LoadGameMessage.class));
+                        }
+                        case ERROR -> {
+                            notificationHandler.notify(new Gson().fromJson(message, ErrorMessage.class));
+                        }
+                    }
                 }
             });
+            ConnectCommand.UserType userType;
+            switch (color) {
+                case "WHITE" -> userType = ConnectCommand.UserType.WHITE_PLAYER;
+                case "BLACK" -> userType = ConnectCommand.UserType.BLACK_PLAYER;
+                default -> userType = ConnectCommand.UserType.OBSERVER;
+            }
+            this.userType = userType;
+            ConnectCommand command = new ConnectCommand(userType, this.username, this.authToken, gameID);
+            send(new Gson().toJson(command));
         }
         catch (URISyntaxException | IOException | DeploymentException ex) {
             throw new ResponseException(500, ex.getMessage());
         }
     }
 
-    public void send(String message) throws IOException {
+    public void leave(int gameID) throws IOException {
+        LeaveCommand command = new LeaveCommand(this.userType, this.username, this.authToken, gameID);
+        send(new Gson().toJson(command));
+    }
+
+    public void resign(int gameID) throws IOException {
+        ResignCommand command = new ResignCommand(this.userType, this.username, this.authToken, gameID);
+        send(new Gson().toJson(command));
+    }
+
+    public void makeMove(int gameID, ChessMove move) throws IOException {
+        MoveCommand command = new MoveCommand(this.userType, this.username, this.authToken, gameID, move);
+        send(new Gson().toJson(command));
+    }
+
+    private void send(String message) throws IOException {
         this.session.getBasicRemote().sendText(message);
     }
 

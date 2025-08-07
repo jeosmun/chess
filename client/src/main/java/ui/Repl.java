@@ -120,7 +120,7 @@ public class Repl implements NotificationHandler {
     }
 
     public void notify(NotificationMessage message) {
-        System.out.print(SET_TEXT_COLOR_BLUE + message.getMessage() + RESET_TEXT_COLOR);
+        System.out.println(SET_TEXT_COLOR_BLUE + message.getMessage() + RESET_TEXT_COLOR);
         printPrompt();
     }
 }

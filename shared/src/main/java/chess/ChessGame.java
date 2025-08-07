@@ -95,6 +95,7 @@ public class ChessGame {
         // Check if is in Stalemate or either team is in Checkmate
         if (isInStalemate(TeamColor.WHITE) || isInStalemate(TeamColor.BLACK)
                 || isInCheckmate(TeamColor.WHITE) || isInCheckmate(TeamColor.BLACK)) {
+            this.gameIsOver = true;
             throw new InvalidMoveException("Error: game is in stalemate or game is in checkmate");
         }
         // Check if piece at start is on the wrong team for whose turn it is

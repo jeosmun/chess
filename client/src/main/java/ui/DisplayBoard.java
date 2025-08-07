@@ -1,153 +1,196 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
+import chess.*;
 
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 import static ui.EscapeSequences.*;
 
 public class DisplayBoard {
 
-    public static void printBoard(ChessBoard board) {
-        // Do it with white on bottom first
-        var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        out.println("From white perspective: ");
-        printHeaderAscending(out);
+    public static String getWhiteBoard(ChessBoard board) {
+        StringBuilder s = new StringBuilder();
+        s.append("Current board\n");
+        s.append(getHeaderAscending());
         int[] descendingRowOrder = new int[]{8, 7, 6, 5, 4, 3, 2, 1};
         for (int i : descendingRowOrder) {
-            printRowAscending(out, board, i);
+            s.append(getRowAscending(board, i));
         }
-        printHeaderAscending(out);
-        // Now do it with black on bottom
-        out.println("From black perspective: ");
-        printHeaderDescending(out);
+        s.append(getHeaderAscending());
+        return s.toString();
+    }
+
+    public static String getBlackBoard(ChessBoard board) {
+        StringBuilder s = new StringBuilder();
+        s.append("Current board\n");
+        s.append(getHeaderDescending());
         int[] ascendingRowOrder = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
         for (int i : ascendingRowOrder) {
-            printRowDescending(out, board, i);
+            s.append(getRowDescending(board, i));
         }
-        printHeaderDescending(out);
+        s.append(getHeaderDescending());
+        return s.toString();
     }
 
-    private static void printRowDescending(PrintStream out, ChessBoard board, int i) {
-        ChessPiece[][] squares = board.getSquares();
-        int[] descendingRowOrder = new int[]{8, 7, 6, 5, 4, 3, 2, 1};
-        printRow(out, i, descendingRowOrder, squares);
-    }
-
-    private static void printHeaderDescending(PrintStream out) {
-        setDarkGrey(out);
-        out.print(EMPTY);
-        out.print(SET_TEXT_COLOR_LIGHT_GREY);
-        char[] headers = new char[]{'H', 'G', 'F', 'E', 'D', 'C', 'B', 'A'};
-        for (char c : headers) {
-            out.print("\u2003" + c + " ");
+    public static String highlightBoard(ChessBoard board, Collection<ChessMove> moves, ChessGame.TeamColor color) {
+        int[] rowOrder;
+        int[] colOrder;
+        String header;
+        if (color == ChessGame.TeamColor.BLACK) {
+            rowOrder = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
+            colOrder = new int[]{8, 7, 6, 5, 4, 3, 2, 1};
+            header = getHeaderDescending();
         }
-        out.print(EMPTY);
-        reset(out);
-        out.print("\n");
+        else {
+            rowOrder = new int[]{8, 7, 6, 5, 4, 3, 2, 1};
+            colOrder = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
+            header = getHeaderAscending();
+        }
+        StringBuilder s = new StringBuilder();
+        s.append("Valid Moves\n");
+        s.append(header);
+        Collection<ChessPosition> endPositions = new ArrayList<>();
+        for (ChessMove move : moves) {
+            endPositions.add(move.getEndPosition());
+        }
+        for (int i : rowOrder) {
+            s.append(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_LIGHT_GREY);
+            s.append("\u2003").append(i).append(" ");
+            for (int j : colOrder) {
+                if ((i + j) % 2 == 1) {
+                    highlightSquare(board, s, endPositions, i, j, SET_BG_COLOR_YELLOW, SET_BG_COLOR_LIGHT_GREY);
+                }
+                else {
+                    highlightSquare(board, s, endPositions, i, j, SET_BG_COLOR_DARK_YELLOW, SET_BG_COLOR_DARK_GREEN);
+                }
+            }
+            s.append(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_LIGHT_GREY);
+            s.append("\u2003").append(i).append(" ").append("\n");
+            s.append(RESET_BG_COLOR + RESET_TEXT_COLOR);
+        }
+        s.append(header);
+        return s.toString();
     }
 
-    private static void printRowAscending(PrintStream out, ChessBoard board, int i) {
-        ChessPiece[][] squares = board.getSquares();
-        int[] ascendingRowOrder = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
-        printRow(out, i, ascendingRowOrder, squares);
+    private static void highlightSquare(ChessBoard board, StringBuilder s, Collection<ChessPosition> endPositions,
+                                        int i, int j, String highlightColor, String bgColor) {
+        ChessPosition position = new ChessPosition(i, j);
+        if (endPositions.contains(position)) {
+            s.append(highlightColor);
+        }
+        else {
+            s.append(bgColor);
+        }
+        ChessPiece piece = board.getPiece(position);
+        if (piece == null) {
+            s.append(EMPTY);
+        }
+        else if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            s.append(SET_TEXT_COLOR_WHITE).append(getPieceChar(piece));
+        }
+        else {
+            s.append(SET_TEXT_COLOR_BLACK).append(getPieceChar(piece));
+        }
+        s.append(RESET_BG_COLOR + RESET_TEXT_COLOR);
     }
 
-    private static void printHeaderAscending(PrintStream out) {
-        setDarkGrey(out);
-        out.print(EMPTY);
-        out.print(SET_TEXT_COLOR_LIGHT_GREY);
+    private static String getHeaderAscending() {
+        StringBuilder s = new StringBuilder();
+        s.append(SET_BG_COLOR_DARK_GREY);
+        s.append(EMPTY);
+        s.append(SET_TEXT_COLOR_LIGHT_GREY);
         char[] headers = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
         for (char c : headers) {
-            out.print("\u2003" + c + " ");
+            s.append("\u2003").append(c).append(" ");
         }
-        out.print(EMPTY);
-        reset(out);
-        out.print("\n");
+        s.append(EMPTY);
+        s.append(RESET_BG_COLOR + RESET_TEXT_COLOR);
+        s.append("\n");
+        return s.toString();
     }
 
-    private static void printRow(PrintStream out, int i, int[] rowOrder, ChessPiece[][] squares) {
-        setDarkGrey(out);
-        out.print(SET_TEXT_COLOR_LIGHT_GREY);
-        out.print("\u2003" + i + " ");
+    private static String getHeaderDescending() {
+        StringBuilder s = new StringBuilder();
+        s.append(SET_BG_COLOR_DARK_GREY);
+        s.append(EMPTY);
+        s.append(SET_TEXT_COLOR_LIGHT_GREY);
+        char[] headers = new char[]{'H', 'G', 'F', 'E', 'D', 'C', 'B', 'A'};
+        for (char c : headers) {
+            s.append("\u2003").append(c).append(" ");
+        }
+        s.append(EMPTY);
+        s.append(RESET_BG_COLOR + RESET_TEXT_COLOR);
+        s.append("\n");
+        return s.toString();
+    }
+
+    private static String getRowDescending(ChessBoard board, int i) {
+        StringBuilder s = new StringBuilder();
+        ChessPiece[][] squares = board.getSquares();
+        int[] descendingRowOrder = new int[]{8, 7, 6, 5, 4, 3, 2, 1};
+        s.append(getRow(i, descendingRowOrder, squares));
+        return s.toString();
+    }
+
+    private static String getRowAscending(ChessBoard board, int i) {
+        StringBuilder s = new StringBuilder();
+        ChessPiece[][] squares = board.getSquares();
+        int[] ascendingRowOrder = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
+        s.append(getRow(i, ascendingRowOrder, squares));
+        return s.toString();
+    }
+
+    private static String getRow(int i, int[] rowOrder, ChessPiece[][] squares) {
+        StringBuilder s = new StringBuilder();
+        s.append(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_LIGHT_GREY);
+        s.append("\u2003").append(i).append(" ");
         // If i is even, then we start with a light square
         if (i % 2 == 0) {
             for (int j : rowOrder) {
-                printPiece(out, squares[i - 1][j - 1], j - 1);
+                s.append(getPiece(squares[i - 1][j - 1], j - 1));
             }
         }
         // Otherwise, we start with a dark square
         else {
             for (int j : rowOrder) {
-                printPiece(out, squares[i - 1][j - 1], j);
+                s.append(getPiece(squares[i - 1][j - 1], j));
             }
         }
-        setDarkGrey(out);
-        out.print(SET_TEXT_COLOR_LIGHT_GREY);
-        out.print("\u2003" + i + " ");
-        reset(out);
-        out.print("\n");
+        s.append(SET_BG_COLOR_DARK_GREY + SET_TEXT_COLOR_LIGHT_GREY);
+        s.append("\u2003").append(i).append(" ");
+        s.append(RESET_BG_COLOR + RESET_TEXT_COLOR).append("\n");
+        return s.toString();
     }
 
-    private static void setBlack(PrintStream out) {
-//        out.print(SET_BG_COLOR_BLACK);
-        out.print(SET_BG_COLOR_DARK_GREEN);
-//        out.print(SET_BG_COLOR_BLACK);
-        out.print(SET_TEXT_COLOR_GREEN);
-    }
-
-    private static void setLightGrey(PrintStream out) {
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(SET_TEXT_COLOR_LIGHT_GREY);
-    }
-
-    private static void setDarkGrey(PrintStream out) {
-        out.print(SET_BG_COLOR_DARK_GREY);
-        out.print(SET_TEXT_COLOR_DARK_GREY);
-    }
-
-    private static void reset(PrintStream out) {
-        out.print(RESET_TEXT_COLOR);
-        out.print(RESET_BG_COLOR);
-    }
-
-    private static void printPiece(PrintStream out, ChessPiece piece, int dark) {
+    private static String getPiece(ChessPiece piece, int dark) {
+        StringBuilder s = new StringBuilder();
         if (piece == null) {
             if (dark % 2 == 0) {
-                setLightGrey(out);
-                out.print(EMPTY);
+                s.append(SET_BG_COLOR_LIGHT_GREY).append(EMPTY);
             }
             else {
-                setBlack(out);
-                out.print(EMPTY);
+                s.append(SET_BG_COLOR_DARK_GREEN).append(EMPTY);
             }
         }
         else {
             if (dark % 2 == 0) {
-                setLightGrey(out);
-                if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                    out.print(SET_TEXT_COLOR_WHITE);
-                }
-                else {
-                    out.print(SET_TEXT_COLOR_BLACK);
-                }
-                out.print(getPieceChar(piece));
+                s.append(SET_BG_COLOR_LIGHT_GREY);
             }
             else {
-                setBlack(out);
-                if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                    out.print(SET_TEXT_COLOR_WHITE);
-                }
-                else {
-                    out.print(SET_TEXT_COLOR_BLACK);
-                }
-                out.print(getPieceChar(piece));
+                s.append(SET_BG_COLOR_DARK_GREEN);
             }
+            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                s.append(SET_TEXT_COLOR_WHITE);
+            }
+            else {
+                s.append(SET_TEXT_COLOR_BLACK);
+            }
+            s.append(getPieceChar(piece));
+            s.append(RESET_BG_COLOR + RESET_TEXT_COLOR);
         }
+        return s.toString();
     }
 
     private static String getPieceChar(ChessPiece piece) {

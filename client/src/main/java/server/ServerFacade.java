@@ -189,7 +189,7 @@ public class ServerFacade extends Endpoint {
             switch (color) {
                 case "WHITE" -> userType = ConnectCommand.UserType.WHITE_PLAYER;
                 case "BLACK" -> userType = ConnectCommand.UserType.BLACK_PLAYER;
-                default -> userType = ConnectCommand.UserType.OBSERVER;
+                case null, default -> userType = UserGameCommand.UserType.OBSERVER;
             }
             this.userType = userType;
             ConnectCommand command = new ConnectCommand(userType, this.username, this.authToken, gameID);

@@ -51,7 +51,7 @@ public class PostloginClient {
                 int gameID = Integer.parseInt(params[0]);
                 // More about implementing this next week
                 try {
-                    DisplayBoard.printBoard(gameDataList.get(gameID - 1).game().getBoard());
+                    server.connectWS(null, gameDataList.get(gameID - 1).gameID());
                 }
                 catch (IndexOutOfBoundsException ex) {
                     throw new ResponseException(400, String.format("%d is not a valid gameID", gameID));
@@ -77,14 +77,14 @@ public class PostloginClient {
                 }
                 try {
                     server.join(new JoinGameRequest(color, gameDataList.get(gameID - 1).gameID(), server.getUsername()));
+                    // Connect through a websocket interaction
+                    server.connectWS(color, gameDataList.get(gameID - 1).gameID());
                 }
                 catch (IndexOutOfBoundsException ex) {
                     throw new ResponseException(400, String.format("%d is not a valid gameID", gameID));
                 }
                 repl.setState(INGAME);
-                // More about implementing gameplay next week
-                // Connect through a websocket interaction
-                DisplayBoard.printBoard(gameDataList.get(gameID -1 ).game().getBoard());
+
                 return "Successfully joined game\n";
             }
             catch (NumberFormatException ex) {

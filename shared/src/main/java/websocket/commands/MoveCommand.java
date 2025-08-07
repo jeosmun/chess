@@ -3,11 +3,6 @@ package websocket.commands;
 import chess.ChessMove;
 
 public class MoveCommand extends UserGameCommand {
-    public enum UserType {
-        WHITE_PLAYER,
-        BLACK_PLAYER,
-        OBSERVER
-    }
 
     private final ChessMove move;
     private final UserType userType;

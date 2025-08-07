@@ -1,11 +1,6 @@
 package websocket.commands;
 
 public class ConnectCommand extends UserGameCommand {
-    public enum UserType {
-        WHITE_PLAYER,
-        BLACK_PLAYER,
-        OBSERVER
-    }
 
     public ConnectCommand(UserType userType, String username, String authToken, Integer gameID) {
         super(CommandType.CONNECT, authToken, gameID);

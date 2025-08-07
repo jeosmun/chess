@@ -1,11 +1,6 @@
 package websocket.commands;
 
 public class LeaveCommand extends UserGameCommand {
-    public enum UserType {
-        WHITE_PLAYER,
-        BLACK_PLAYER,
-        OBSERVER
-    }
 
     public LeaveCommand(UserType userType, String username, String authToken, Integer gameID) {
         super(CommandType.LEAVE, authToken, gameID);
